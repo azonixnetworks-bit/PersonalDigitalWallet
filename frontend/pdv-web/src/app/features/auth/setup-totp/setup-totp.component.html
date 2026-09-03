@@ -1,0 +1,72 @@
+<main class="auth-wrap">
+  <section class="auth-visual">
+    <div class="auth-brand"><span class="brand-mark">🔒</span> Personal Digital Vault</div>
+    <div class="auth-hero">
+      <span class="eyebrow">Step 2 of 2</span>
+      <h1>Add an authenticator before your vault opens.</h1>
+      <p>Scan the QR code with Google Authenticator, Microsoft Authenticator or another TOTP-compatible app, then enter its current six-digit code.</p>
+      <div class="security-pills">
+        <span class="security-pill">TOTP protected login</span>
+        <span class="security-pill">Temporary setup token</span>
+        <span class="security-pill">Secret cleared after setup</span>
+      </div>
+    </div>
+    <div class="auth-foot">Never share your setup key or authenticator codes</div>
+  </section>
+
+  <section class="auth-panel">
+    <div class="auth-card auth-card--wide">
+      <span class="eyebrow">Authenticator setup</span>
+      <h2>Protect your account</h2>
+      <p class="auth-card__intro">Scan the QR code once. If scanning is unavailable, enter the manual setup key in your authenticator app.</p>
+
+      @if (message()) {
+        <app-ui-alert [message]="message()" [tone]="messageTone()" />
+      }
+
+      @if (loadingSetup()) {
+        <div class="auth-loading"><app-ui-loader label="Generating secure authenticator setup…" /></div>
+      } @else if (setup(); as details) {
+        <div class="qr-box">
+          <img [src]="details.qrCodeDataUrl" alt="Scan this QR code using your authenticator app">
+        </div>
+
+        <div class="secret-box">
+          <small>Manual setup key</small>
+          <strong>{{ details.secretKey }}</strong>
+          <span class="secret-warning">Keep this key private. It is temporarily cached only for this setup session.</span>
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="verify()" novalidate>
+        <div class="field">
+          <label for="totpSetupCode">Authenticator code</label>
+          <input
+            id="totpSetupCode"
+            class="otp-input"
+            formControlName="code"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            maxlength="6"
+            placeholder="000000"
+          >
+          @if (form.controls.code.touched && form.controls.code.invalid) {
+            <small class="field-error">Enter exactly 6 digits.</small>
+          }
+        </div>
+
+        <button type="submit" [disabled]="verifying() || blocked() || loadingSetup() || !setup()">
+          {{ verifying() ? 'Verifying authenticator…' : 'Enable two-factor authentication' }}
+        </button>
+      </form>
+
+      @if (blocked()) {
+        <div class="auth-actions">
+          <button class="button-secondary" type="button" (click)="restart()">Restart registration</button>
+        </div>
+      }
+
+      <div class="auth-card__footer">Already configured? <a routerLink="/login">Sign in</a></div>
+    </div>
+  </section>
+</main>

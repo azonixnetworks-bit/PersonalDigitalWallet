@@ -1,0 +1,53 @@
+<main class="auth-wrap">
+  <section class="auth-visual">
+    <div class="auth-brand"><span class="brand-mark">🔒</span> Personal Digital Vault</div>
+    <div class="auth-hero">
+      <span class="eyebrow">Private by design</span>
+      <h1>One secure place for what matters.</h1>
+      <p>Store personal documents and sensitive credential records inside a focused vault experience built around ownership and protected access.</p>
+      <div class="security-pills">
+        <span class="security-pill">JWT protected access</span>
+        <span class="security-pill">Two-factor authentication</span>
+        <span class="security-pill">Encrypted sensitive data</span>
+      </div>
+    </div>
+    <div class="auth-foot">Personal Digital Vault • Secure personal storage workspace</div>
+  </section>
+
+  <section class="auth-panel">
+    <div class="auth-card">
+      <span class="eyebrow">Welcome back</span>
+      <h2>Sign in to your vault</h2>
+      <p class="auth-card__intro">Enter your account details. Personal accounts continue with an authenticator check.</p>
+
+      @if (message()) {
+        <app-ui-alert [message]="message()" [tone]="messageTone()" />
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="field">
+          <label for="loginEmail">Email address</label>
+          <input id="loginEmail" formControlName="email" type="email" placeholder="name@example.com" autocomplete="email">
+          @if (form.controls.email.touched && form.controls.email.invalid) {
+            <small class="field-error">Enter a valid email address.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="loginPassword">Password</label>
+          <input id="loginPassword" formControlName="password" type="password" placeholder="Enter your password" autocomplete="current-password">
+          @if (form.controls.password.touched && form.controls.password.invalid) {
+            <small class="field-error">Password is required.</small>
+          }
+        </div>
+
+        <div class="auth-link-row"><a routerLink="/forgot-password">Forgot password?</a></div>
+        <button type="submit" [disabled]="loading()">
+          {{ loading() ? 'Signing in…' : 'Login securely' }}
+        </button>
+      </form>
+
+      <div class="auth-card__footer">New to the vault? <a routerLink="/register">Create account</a></div>
+    </div>
+  </section>
+</main>
