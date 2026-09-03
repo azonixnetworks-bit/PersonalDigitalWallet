@@ -1,0 +1,30 @@
+PersonalDigitalVault PayPal + Stripe Parallel Package
+Static Validation Report
+
+PASS - Existing PayPal service/controller/interface files present.
+PASS - Stripe service/controller/interface files present.
+PASS - PayPal route remains /api/subscriptions.
+PASS - Stripe subscription route is /api/stripe/subscriptions.
+PASS - Stripe webhook route is /api/stripe/webhook.
+PASS - Old ReplacePayPalWithStripe migration replaced by safe no-op source.
+PASS - AddStripeSubscriptionSupport migration contains no PayPal DropColumn.
+PASS - AppDbContext keeps PayPal indexes and adds Stripe indexes.
+PASS - Shared entitlement evaluates valid PayPal OR valid Stripe subscription.
+PASS - Provider-specific services query only their own provider rows.
+PASS - All frontend JavaScript files pass node --check.
+PASS - JSON parse validation.
+PASS - csproj XML parse validation.
+PASS - C# brace/delimiter sanity scan.
+PASS - No real-looking Stripe secrets found in source.
+PASS - bin/obj/.vs excluded from delivery.
+PASS - SecureStorage payloads excluded from delivery.
+
+NOT EXECUTED IN THIS ENVIRONMENT
+- dotnet restore/build/EF database update (dotnet SDK is not installed here).
+
+AUTHORITATIVE LOCAL VALIDATION
+Run:
+  .\scripts\Build-And-Migrate.ps1
+
+Then run Stripe Sandbox E2E using:
+  docs\STRIPE_LOCAL_E2E_CHECKLIST.md

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stripe Subscription - Personal Digital Vault</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/stripe-subscription.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+    <header class="topbar">
+        <strong>Personal Digital Vault</strong>
+        <nav>
+            <a href="/html/dashboard.html">Dashboard</a>
+            <a href="/html/folders.html">Folders</a>
+            <a href="/html/documents.html">Documents</a>
+            <a href="/html/credentials.html">Credentials</a>
+            <a href="/html/search.html">Search</a>
+            <a href="/html/subscription.html">PayPal</a>
+            <a href="/html/stripe-subscription.html" aria-current="page">Stripe</a>
+            <a href="/html/profile.html">Profile</a>
+            <button type="button" data-logout>Logout</button>
+        </nav>
+    </header>
+
+    <main class="container subscription-page">
+        <section class="subscription-heading">
+            <div>
+                <p class="subscription-eyebrow">PERSONAL DIGITAL VAULT</p>
+                <h1>Subscription</h1>
+                <p class="subscription-description">
+                    Manage your Free or Premium vault plan securely using Stripe recurring billing.
+                </p>
+            </div>
+            <div id="environmentBadge" class="environment-badge">Loading...</div>
+        </section>
+
+        <div id="subscriptionMessage" class="subscription-message" hidden></div>
+
+        <section class="current-subscription-card">
+            <div class="current-plan-header">
+                <div>
+                    <span class="section-label">CURRENT PLAN</span>
+                    <h2 id="currentPlanName">Loading...</h2>
+                </div>
+                <span id="currentStatus" class="status-badge status-neutral">Checking</span>
+            </div>
+
+            <div id="subscriptionDetails" class="subscription-details">
+                <div class="detail-item">
+                    <span>Status</span>
+                    <strong>Loading...</strong>
+                </div>
+            </div>
+
+            <button id="manageBillingButton"
+                    class="manage-billing-button"
+                    type="button"
+                    hidden>
+                Manage Billing
+            </button>
+        </section>
+
+        <section class="plans-section">
+            <div class="plans-heading">
+                <span class="section-label">AVAILABLE PLANS</span>
+                <h2>Choose your vault plan</h2>
+            </div>
+
+            <div class="subscription-plans">
+                <article class="plan-card">
+                    <div class="plan-card-top">
+                        <span class="plan-icon">🔐</span>
+                        <div>
+                            <h3>Free</h3>
+                            <p>Essential secure vault</p>
+                        </div>
+                    </div>
+                    <div class="plan-price">
+                        <strong>Free</strong>
+                        <span>No recurring payment</span>
+                    </div>
+                    <div class="plan-features">
+                        <p>✓ Up to 20 documents</p>
+                        <p>✓ Up to 50 MB total document storage</p>
+                        <p>✓ Email verification</p>
+                        <p>✓ Authenticator MFA</p>
+                        <p>✓ Secure folders</p>
+                        <p>✓ Encrypted credential vault</p>
+                    </div>
+                </article>
+
+                <article class="plan-card premium-plan-card">
+                    <div class="premium-label">PREMIUM</div>
+                    <div class="plan-card-top">
+                        <span class="plan-icon">⭐</span>
+                        <div>
+                            <h3 id="premiumPlanName">Premium Monthly</h3>
+                            <p>Expanded encrypted vault capacity</p>
+                        </div>
+                    </div>
+                    <div class="plan-price">
+                        <strong id="premiumPriceText">Loading price...</strong>
+                        <span id="premiumIntervalText">Recurring price verified from Stripe</span>
+                    </div>
+                    <div class="plan-features">
+                        <p>✓ Up to 200 documents</p>
+                        <p>✓ Up to 500 MB total document storage</p>
+                        <p>✓ Secure Stripe-hosted Checkout</p>
+                        <p>✓ Stripe Customer Portal for billing management</p>
+                        <p>✓ Signed webhook subscription synchronization</p>
+                        <p>✓ Backend-enforced Premium entitlement</p>
+                    </div>
+
+                    <div id="stripeSection" class="stripe-section">
+                        <p id="stripeLoadingText" class="stripe-loading-text">
+                            Preparing secure Stripe Checkout...
+                        </p>
+                        <button id="stripeCheckoutButton"
+                                class="stripe-checkout-button"
+                                type="button">
+                            Upgrade with Stripe
+                        </button>
+                    </div>
+
+                    <div id="premiumActiveBox" class="premium-active-box" hidden>
+                        ✓ Premium subscription is active
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="subscription-security-note">
+            <strong>Secure billing</strong>
+            <p>
+                Personal Digital Vault does not collect or store card numbers or payment credentials.
+                Checkout is hosted by Stripe. Premium access is granted only after the PDV backend
+                verifies Stripe customer ownership, the configured Price ID, and the subscription status.
+            </p>
+        </section>
+    </main>
+
+    <script type="module" src="/js/pages/stripe-subscription.js"></script>
+    <script type="module">
+        import { initNavbar } from '/js/components/navbar.js';
+        initNavbar();
+    </script>
+</body>
+</html>

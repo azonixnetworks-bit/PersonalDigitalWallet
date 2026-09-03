@@ -1,0 +1,25 @@
+PERSONAL DIGITAL VAULT — PAYPAL + STRIPE PARALLEL BILLING
+
+FINAL DECISION
+- PayPal remains supported.
+- Stripe is added as a second subscription provider.
+- Existing PayPal services/controllers/DTOs are not removed.
+- Stripe uses separate /api/stripe/subscriptions/* endpoints.
+- Both providers feed the shared Premium entitlement layer.
+
+DATABASE
+- 20260902000100_ReplacePayPalWithStripe.cs is now a SAFE NO-OP compatibility migration.
+- 20260902000200_AddStripeSubscriptionSupport.cs adds Stripe fields.
+- PayPal columns and existing PayPal data are preserved.
+- PayPal provider IDs become nullable to permit Stripe rows.
+- PayPal/Stripe provider IDs use filtered unique indexes.
+
+FRONTEND (CURRENT HTML/JS)
+- PayPal: /html/subscription.html
+- Stripe: /html/stripe-subscription.html
+- Angular migration can start only after local payment regression/E2E is frozen.
+
+IMPORTANT
+If the OLD destructive ReplacePayPalWithStripe migration was already applied
+successfully to the database before this corrected package, restore the DB
+backup before applying the corrected migrations.

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Admin Dashboard | Personal Digital Vault
+    </title>
+
+    <!-- Common CSS -->
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/components.css">
+
+    <!-- Admin-only CSS -->
+    <link rel="stylesheet" href="/css/admin.css">
+
+    <link rel="stylesheet" href="/css/responsive.css">
+</head>
+
+
+
+<body class="admin-body">
+
+    <!-- =====================================================
+         ADMIN NAVBAR
+         User/Client navbar inga use panna koodathu.
+         ===================================================== -->
+    <header class="admin-topbar">
+
+        <div class="admin-brand">
+
+            <div class="admin-brand-icon">
+                🔐
+            </div>
+
+            <div>
+                <strong>
+                    Personal Digital Vault
+                </strong>
+
+                <span>
+                    Administrator Console
+                </span>
+            </div>
+
+        </div>
+
+
+        <nav class="admin-nav">
+
+            <!-- Admin overview -->
+            <a href="#overview"
+               class="admin-nav-link active">
+                Overview
+            </a>
+
+            <!-- User management -->
+            <a href="#users-section"
+               class="admin-nav-link">
+                Users
+            </a>
+
+            <!-- Upload metadata -->
+            <a href="#uploads-section"
+               class="admin-nav-link">
+                Upload Activity
+            </a>
+
+            <!-- Existing navbar.js logout handler
+                 data-logout attribute-a identify pannum -->
+            <button type="button"
+                    class="admin-logout"
+                    data-logout>
+                Logout
+            </button>
+
+        </nav>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN ADMIN AREA
+         ===================================================== -->
+    <main class="admin-container">
+
+
+        <!-- Global success / error message -->
+        <div id="message"
+             class="admin-message"
+             hidden>
+        </div>
+
+
+        <!-- =================================================
+             OVERVIEW
+             ================================================= -->
+        <section id="overview"
+                 class="admin-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-eyebrow">
+                        ADMIN CONSOLE
+                    </span>
+
+                    <h1>
+                        System Overview
+                    </h1>
+
+                    <p>
+                        Monitor account activity and vault usage
+                        without accessing users' private content.
+                    </p>
+                </div>
+
+                <div class="security-status">
+                    <span class="security-dot"></span>
+                    Secure Admin Access
+                </div>
+
+            </div>
+
+
+            <!-- JS dashboard counts inga inject pannum -->
+            <div id="stats"
+                 class="admin-stats">
+
+                <div class="admin-stat-card loading-card">
+                    Loading statistics...
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             USER ACCOUNTS
+             ================================================= -->
+        <section id="users-section"
+                 class="admin-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-eyebrow">
+                        ACCOUNT MANAGEMENT
+                    </span>
+
+                    <h2>
+                        User Accounts
+                    </h2>
+
+                    <p>
+                        View registered accounts and control
+                        account access.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="admin-table-card">
+
+                <div class="admin-user-toolbar">
+
+                    <div>
+                        <h3>Registered Users</h3>
+
+                        <p>
+                            Search, enable or disable user accounts.
+                        </p>
+                    </div>
+
+                    <div class="admin-search-box">
+
+                        <input type="search"
+                               id="userSearch"
+                               placeholder="Search name or email..."
+                               autocomplete="off">
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-scroll">
+
+                    <table class="admin-table">
+
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <!-- JS user rows inga inject pannum -->
+                        <tbody id="users">
+
+                            <tr>
+                                <td colspan="5">
+                                    Loading users...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             UPLOAD ACTIVITY
+             ================================================= -->
+        <section id="uploads-section"
+                 class="admin-section">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-eyebrow">
+                        FILE METADATA
+                    </span>
+
+                    <h2>
+                        Upload Activity
+                    </h2>
+
+                    <p>
+                        Metadata only. Administrators cannot
+                        preview, download or decrypt private files.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="admin-table-card">
+
+                <div class="table-header">
+
+                    <div>
+                        <h3>
+                            Recent Uploads
+                        </h3>
+
+                        <p>
+                            User name, file name, size and upload time.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="table-scroll">
+
+                    <table class="admin-table">
+
+                        <thead>
+                            <tr>
+                                <th>Uploaded By</th>
+                                <th>File Name</th>
+                                <th>File Size</th>
+                                <th>Uploaded At</th>
+                            </tr>
+                        </thead>
+
+                        <!-- JS upload rows inga inject pannum -->
+                        <tbody id="uploads">
+
+                            <tr>
+                                <td colspan="4">
+                                    Loading uploads...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <!-- Security notice -->
+            <div class="privacy-notice">
+
+                <div class="privacy-icon">
+                    🔒
+                </div>
+
+                <div>
+                    <strong>
+                        Privacy Protected
+                    </strong>
+
+                    <p>
+                        Administrator access is limited to file
+                        metadata. Private file contents and
+                        credentials remain encrypted.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+ 
+
+
+    <!-- Admin page logic -->
+    <script type="module"
+            src="/js/pages/admin.js">
+    </script>
+
+
+    <!-- Existing logout system -->
+    <script type="module">
+
+        import {
+            initNavbar
+        } from '/js/components/navbar.js';
+
+        initNavbar();
+
+    </script>
+
+</body>
+
+</html>

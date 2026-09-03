@@ -1,0 +1,48 @@
+PERSONAL DIGITAL VAULT — USER DASHBOARD V2
+
+Added backend:
+- Controllers/DashboardController.cs
+- DTOs/Dashboard/DashboardDto.cs
+- Interfaces/Services/IDashboardService.cs
+- Services/DashboardService.cs
+- GET /api/dashboard
+
+Updated backend:
+- Program.cs — Dashboard service DI registration
+- DocumentRepository.cs — include owned Folder metadata on user document list
+- SubscriptionEntitlementDto.cs — safe provider/status/next-billing metadata
+- SubscriptionEntitlementService.cs — populates provider lifecycle metadata from the already validated active premium subscription
+
+Added frontend:
+- wwwroot/js/api/dashboardApi.js
+
+Replaced frontend:
+- wwwroot/html/dashboard.html
+- wwwroot/js/pages/dashboard.js
+- wwwroot/css/dashboard.css
+
+Preserved latest working file-upload styling:
+- wwwroot/css/vault.css
+
+Dashboard UX:
+- Personalized local-time greeting
+- Folder / document / credential / shared-with-me counts
+- Storage usage and document quota progress
+- FREE/PREMIUM plan card
+- PayPal/Stripe-aware billing action
+- Quick actions
+- Recent 5 document metadata with folder name
+- Security status
+- Recent 4 folders with document counts
+
+Security boundaries:
+- Dashboard is User-role authorized
+- Service repeats exact User role check
+- UserId is taken only from validated JWT claims
+- No decrypted document bytes
+- No credential secrets
+- No encryption keys
+- No storage paths
+- No payment secrets/card data
+
+DATABASE MIGRATION: NOT REQUIRED

@@ -1,0 +1,138 @@
+﻿<!doctype html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+
+    <!-- ================================================= -->
+    <!-- SECURITY -->
+    <!-- ================================================= -->
+    <!--
+        Invitation URL contains token inside URL fragment.
+
+        Referrer information external site-ku leak aaga
+        koodathu.
+    -->
+
+    <meta name="referrer"
+          content="no-referrer">
+
+
+    <title>
+        Secure Document Invitation
+    </title>
+
+
+    <!--
+        IMPORTANT:
+
+        Sensitive invitation page-la external CDN,
+        external JavaScript,
+        trackers add panna vendaam.
+
+        Local CSS mattum.
+    -->
+
+    <link rel="stylesheet"
+          href="/css/main.css">
+
+    <link rel="stylesheet"
+          href="/css/layout.css">
+
+    <link rel="stylesheet"
+          href="/css/components.css">
+
+    <link rel="stylesheet"
+          href="/css/vault.css">
+
+    <link rel="stylesheet"
+          href="/css/responsive.css">
+
+</head>
+
+
+<body>
+
+
+    <main class="container">
+
+
+        <section class="card">
+
+
+            <h1>
+                Secure Document Invitation
+            </h1>
+
+
+            <p>
+                This invitation requires the registered
+                recipient account and two-factor authentication.
+            </p>
+
+
+            <!-- ============================================= -->
+            <!-- STATUS -->
+            <!-- ============================================= -->
+
+            <p id="shareStatus"
+               aria-live="polite">
+
+                Checking secure invitation...
+
+            </p>
+
+
+            <!-- ============================================= -->
+            <!-- LOGIN WITH CORRECT ACCOUNT -->
+            <!-- ============================================= -->
+
+            <button id="loginAgainButton"
+                    type="button"
+                    hidden>
+
+                Login With Correct Account
+
+            </button>
+
+
+            <!-- ============================================= -->
+            <!-- DASHBOARD -->
+            <!-- ============================================= -->
+
+            <p>
+
+                <a id="dashboardLink"
+                   href="/html/dashboard.html">
+
+                    Go to Dashboard
+
+                </a>
+
+            </p>
+
+
+        </section>
+
+
+    </main>
+
+
+    <!--
+        No raw invitation token HTML-la render panna maatom.
+    -->
+
+    <script type="module"
+            src="/js/pages/share-invitation.js">
+    </script>
+
+
+</body>
+
+</html>

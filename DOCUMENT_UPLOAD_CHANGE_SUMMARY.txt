@@ -1,0 +1,17 @@
+DOCUMENT UPLOAD UX UPDATE
+=========================
+
+Added:
+- Root Vault vs Inside a Folder destination selection
+- Live loading of current user's existing folders
+- Folder dropdown enabled only when folder destination is selected
+- Root Vault upload sends no FolderId
+- Folder upload sends selected FolderId
+- Existing backend folder ownership validation preserved
+- Actual browser upload progress
+- Server-side encryption processing state
+- 100% / "File encrypted" only after successful backend encryption + secure storage response
+
+Database migration required: NO
+Backend schema change required: NO
+PayPal/Stripe change: NO

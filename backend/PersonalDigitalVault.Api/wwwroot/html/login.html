@@ -1,0 +1,232 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>
+        Login | Personal Digital Vault
+    </title>
+
+    <link rel="stylesheet"
+          href="/css/main.css">
+
+    <link rel="stylesheet"
+          href="/css/layout.css">
+
+    <link rel="stylesheet"
+          href="/css/auth.css">
+
+    <link rel="stylesheet"
+          href="/css/responsive.css">
+
+</head>
+
+
+<body>
+
+    <main class="auth-wrap">
+
+        <!-- =================================================
+             LEFT VISUAL
+             ================================================= -->
+
+        <section class="auth-visual">
+
+            <div class="auth-brand">
+
+                <span class="brand-mark">
+
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2">
+
+                        <path d="M7 10V7a5 5 0 0 1 10 0v3">
+                        </path>
+
+                        <rect x="5"
+                              y="10"
+                              width="14"
+                              height="11"
+                              rx="3">
+                        </rect>
+
+                    </svg>
+
+                </span>
+
+                Personal Digital Vault
+
+            </div>
+
+
+            <div class="auth-hero">
+
+                <span class="eyebrow">
+                    Private by design
+                </span>
+
+                <h1>
+                    One secure place for what matters.
+                </h1>
+
+                <p>
+                    Store personal documents and sensitive
+                    credential records inside a focused vault
+                    experience built around ownership and
+                    protected access.
+                </p>
+
+
+                <div class="security-pills">
+
+                    <span class="security-pill">
+                        JWT protected access
+                    </span>
+
+                    <span class="security-pill">
+                        Encrypted sensitive data
+                    </span>
+
+                    <span class="security-pill">
+                        Integrity checking
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="auth-foot">
+
+                Personal Digital Vault
+                • Secure personal storage workspace
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             LOGIN PANEL
+             ================================================= -->
+
+        <section class="auth-panel">
+
+            <div class="auth-card">
+
+                <span class="eyebrow">
+                    Welcome back
+                </span>
+
+
+                <h2>
+                    Sign in to your vault
+                </h2>
+
+
+                <p class="auth-card__intro">
+
+                    Enter your account details
+                    to continue securely.
+
+                </p>
+
+
+                <form>
+
+                    <div class="field">
+
+                        <label for="loginEmail">
+                            Email address
+                        </label>
+
+                        <input id="loginEmail"
+                               name="email"
+                               type="email"
+                               placeholder="name@example.com"
+                               autocomplete="email"
+                               required>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="loginPassword">
+                            Password
+                        </label>
+
+                        <input id="loginPassword"
+                               name="password"
+                               type="password"
+                               placeholder="Enter your password"
+                               autocomplete="current-password"
+                               required>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         FORGOT PASSWORD
+                         ===================================== -->
+
+                    <div style="text-align:right; margin-top:-6px;">
+
+                        <a href="/html/forgot-password.html"
+                           style="
+                                color:#9ec1ff;
+                                text-decoration:none;
+                                font-size:.88rem;
+                                font-weight:700;
+                            ">
+
+                            Forgot password?
+
+                        </a>
+
+                    </div>
+
+
+                    <button type="submit">
+                        Login securely
+                    </button>
+
+                </form>
+
+
+                <p id="message"
+                   class="error">
+                </p>
+
+
+                <div class="auth-card__footer">
+
+                    New to the vault?
+
+                    <a href="/html/register.html">
+                        Create account
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script type="module"
+            src="/js/pages/login.js">
+    </script>
+
+</body>
+
+</html>
