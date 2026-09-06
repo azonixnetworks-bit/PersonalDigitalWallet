@@ -178,7 +178,7 @@
     } @else if (filteredDocuments().length > 0) {
       <div class="document-list">
         @for (document of filteredDocuments(); track document.id) {
-          <article class="card document-card">
+          <article class="card document-card" [class.search-focus]="focusedDocumentId() === document.id">
             <div class="document-main">
               <span class="document-icon" aria-hidden="true">📄</span>
               <div class="document-copy">
@@ -204,7 +204,7 @@
   </section>
 
   @if (details(); as item) {
-    <section class="card details-panel" aria-labelledby="details-title">
+    <section id="document-details-panel" class="card details-panel" aria-labelledby="details-title">
       <div class="panel-heading">
         <div><span class="vault-kicker">Metadata</span><h2 id="details-title">Document details</h2></div>
         <button class="btn btn--secondary" type="button" (click)="closeDetails()">Close</button>

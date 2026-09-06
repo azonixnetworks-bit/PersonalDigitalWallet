@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { finalize } from 'rxjs';
 import {
   CreateCredentialRequest,
@@ -32,6 +34,7 @@ export class CredentialsComponent implements OnInit, OnDestroy {
   readonly revealBusyId = signal<number | null>(null);
   readonly passwordVisible = signal(false);
   readonly revealExpiresIn = signal<number | null>(null);
+  readonly focusedCredentialId = signal<number | null>(null);
 
   private revealTimer: number | null = null;
   private revealCountdownTimer: number | null = null;
@@ -67,10 +70,17 @@ export class CredentialsComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly credentialsApi: CredentialService,
-    private readonly notifications: NotificationService
+    private readonly notifications: NotificationService,
+    private readonly route: ActivatedRoute,
+    private readonly destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
+    this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
+      const credentialId = Number(params.get('credentialId'));
+      this.focusedCredentialId.set(Number.isInteger(credentialId) && credentialId > 0 ? credentialId : null);
+      this.scrollToFocusedCredential();
+    });
     this.loadCredentials();
   }
 
@@ -88,7 +98,10 @@ export class CredentialsComponent implements OnInit, OnDestroy {
         this.refreshing.set(false);
       })
     ).subscribe({
-      next: credentials => this.credentials.set(Array.isArray(credentials) ? credentials : []),
+      next: credentials => {
+        this.credentials.set(Array.isArray(credentials) ? credentials : []);
+        this.scrollToFocusedCredential();
+      },
       error: error => this.error.set(this.message(error, 'Credentials could not be loaded.'))
     });
   }
@@ -236,6 +249,12 @@ export class CredentialsComponent implements OnInit, OnDestroy {
     } catch {
       return safe;
     }
+  }
+
+  private scrollToFocusedCredential(): void {
+    const id = this.focusedCredentialId();
+    if (!id || !this.credentials().some(item => item.id === id)) return;
+    window.requestAnimationFrame(() => document.getElementById(`credential-card-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
   }
 
   private buildRequest(): CreateCredentialRequest | null {
