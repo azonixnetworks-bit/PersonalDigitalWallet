@@ -1,0 +1,116 @@
+<main class="vault-page folders-page">
+  <section class="vault-page-heading">
+    <app-page-header
+      eyebrow="Secure organization"
+      title="Folders"
+      subtitle="Create simple private folders to organize documents in your encrypted vault." />
+
+    <div class="vault-heading-actions">
+      <span class="vault-count-pill">{{ folderCountLabel() }}</span>
+      <button class="btn btn--secondary" type="button" [disabled]="refreshing()" (click)="loadFolders(true)">
+        {{ refreshing() ? 'Refreshing…' : 'Refresh' }}
+      </button>
+    </div>
+  </section>
+
+  <section id="folderForm" class="card vault-create-card" aria-labelledby="create-folder-title">
+    <div class="vault-card-heading">
+      <div>
+        <span class="vault-kicker">New folder</span>
+        <h2 id="create-folder-title">Create a folder</h2>
+        <p>Use folders for categories such as Certificates, Identity, Property or Finance.</p>
+      </div>
+      <span class="vault-card-icon" aria-hidden="true">📁</span>
+    </div>
+
+    <form class="folder-create-form" (ngSubmit)="createFolder()">
+      <label for="folderName">Folder name</label>
+      <div class="folder-create-row">
+        <input
+          id="folderName"
+          type="text"
+          autocomplete="off"
+          maxlength="200"
+          placeholder="Example: Certificates"
+          [formControl]="folderName">
+        <button type="submit" [disabled]="saving() || folderName.invalid">
+          {{ saving() ? 'Creating…' : 'Create folder' }}
+        </button>
+      </div>
+      @if (folderName.touched && folderName.hasError('required')) {
+        <p class="field-error">Folder name is required.</p>
+      }
+    </form>
+  </section>
+
+  @if (error()) {
+    <section class="card vault-error-card" role="alert">
+      <div>
+        <strong>Folders are unavailable</strong>
+        <span>{{ error() }}</span>
+      </div>
+      <button class="btn btn--secondary" type="button" (click)="loadFolders()">Try again</button>
+    </section>
+  }
+
+  <section class="vault-list-section" aria-labelledby="folder-list-title">
+    <div class="vault-section-heading">
+      <div>
+        <span class="vault-kicker">Your vault</span>
+        <h2 id="folder-list-title">My folders</h2>
+      </div>
+      <a class="text-link" routerLink="/vault/documents">Open all documents →</a>
+    </div>
+
+    @if (loading()) {
+      <div class="card vault-state-card"><app-ui-loader label="Loading your folders…" /></div>
+    } @else if (!error() && folders().length === 0) {
+      <div class="card vault-state-card">
+        <app-ui-empty-state
+          icon="📁"
+          title="No folders yet"
+          description="Create your first folder above, or keep uploading directly to Root Vault." />
+      </div>
+    } @else if (folders().length > 0) {
+      <div class="folder-grid">
+        @for (folder of folders(); track folder.id) {
+          <article class="card folder-card">
+            <div class="folder-card-main">
+              <span class="folder-icon" aria-hidden="true">📁</span>
+              <div class="folder-copy">
+                @if (editingFolderId() === folder.id) {
+                  <label class="sr-only" [for]="'folder-edit-' + folder.id">New folder name</label>
+                  <input
+                    class="folder-inline-input"
+                    [id]="'folder-edit-' + folder.id"
+                    type="text"
+                    maxlength="200"
+                    [value]="editName()"
+                    (input)="setEditName($any($event.target).value)"
+                    (keyup.enter)="saveRename(folder)"
+                    (keyup.escape)="cancelRename()">
+                } @else {
+                  <strong>{{ folder.name || 'Unnamed folder' }}</strong>
+                }
+                <small>Created {{ formatDate(folder.createdAt) }}</small>
+              </div>
+            </div>
+
+            <div class="folder-actions">
+              @if (editingFolderId() === folder.id) {
+                <button type="button" [disabled]="busyFolderId() === folder.id" (click)="saveRename(folder)">Save</button>
+                <button class="btn--secondary" type="button" [disabled]="busyFolderId() === folder.id" (click)="cancelRename()">Cancel</button>
+              } @else {
+                <a class="btn folder-open-btn" [routerLink]="['/vault/documents']" [queryParams]="{ folderId: folder.id }">Open documents</a>
+                <button class="btn--secondary" type="button" [disabled]="busyFolderId() !== null" (click)="startRename(folder)">Rename</button>
+                <button class="danger-button" type="button" [disabled]="busyFolderId() !== null" (click)="deleteFolder(folder)">
+                  {{ busyFolderId() === folder.id ? 'Working…' : 'Delete' }}
+                </button>
+              }
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </section>
+</main>
