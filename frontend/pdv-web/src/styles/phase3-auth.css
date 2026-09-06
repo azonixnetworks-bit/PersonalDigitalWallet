@@ -1,0 +1,79 @@
+/* =========================================================
+   PDV Angular Phase 3 — Authentication UX
+   ========================================================= */
+
+.auth-card app-ui-alert {
+  display: block;
+  margin: 0 0 18px;
+}
+
+.auth-card--wide {
+  width: min(520px, 100%);
+}
+
+.auth-highlight {
+  color: var(--slate-200);
+  overflow-wrap: anywhere;
+}
+
+.auth-loading {
+  margin: 18px 0 24px;
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(10, 15, 30, .45);
+  border: 1px solid rgba(148, 163, 184, .12);
+}
+
+.field-error {
+  display: block;
+  margin-top: 7px;
+  color: #fda4af;
+  font-size: .79rem;
+  line-height: 1.35;
+}
+
+.secret-warning {
+  color: var(--slate-400);
+  font-size: .76rem;
+  line-height: 1.45;
+}
+
+.button-secondary,
+.button-ghost {
+  width: 100%;
+}
+
+.button-secondary {
+  background: rgba(59, 130, 246, .12);
+  border: 1px solid rgba(96, 165, 250, .24);
+  color: #cfe1ff;
+}
+
+.button-secondary:hover:not(:disabled) {
+  background: rgba(59, 130, 246, .19);
+}
+
+.button-ghost {
+  background: transparent;
+  border: 1px solid rgba(148, 163, 184, .16);
+  color: var(--slate-300);
+}
+
+.button-ghost:hover:not(:disabled) {
+  background: rgba(148, 163, 184, .07);
+}
+
+.auth-card .otp-input {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 560px) {
+  .auth-card--wide {
+    width: 100%;
+  }
+
+  .otp-input {
+    font-size: 1.35rem;
+    letter-spacing: .25rem;
+  }
+}

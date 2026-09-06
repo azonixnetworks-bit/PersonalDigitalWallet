@@ -1,0 +1,19 @@
+<header class="topbar">
+  <div class="topbar__inner">
+    <app-brand />
+    <button class="nav-toggle" type="button" [attr.aria-expanded]="menuOpen()" aria-controls="userPrimaryNavigation" aria-label="Toggle navigation" (click)="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+    <nav id="userPrimaryNavigation" [class.nav-open]="menuOpen()" aria-label="Primary navigation">
+      <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Dashboard</a>
+      <a routerLink="/vault/folders" routerLinkActive="active" (click)="closeMenu()">Folders</a>
+      <a routerLink="/vault/documents" routerLinkActive="active" (click)="closeMenu()">Documents</a>
+      <a routerLink="/shared-with-me" routerLinkActive="active" (click)="closeMenu()">Shared With Me</a>
+      <a routerLink="/vault/credentials" routerLinkActive="active" (click)="closeMenu()">Credentials</a>
+      <a routerLink="/search" routerLinkActive="active" (click)="closeMenu()">Search</a>
+      <a routerLink="/profile" routerLinkActive="active" (click)="closeMenu()">Profile</a>
+      <a routerLink="/subscription" routerLinkActive="active" (click)="closeMenu()">Subscription</a>
+      <button class="logout-button" type="button" [disabled]="loggingOut()" (click)="logout()">{{ loggingOut() ? 'Signing out…' : 'Logout' }}</button>
+    </nav>
+  </div>
+</header>
