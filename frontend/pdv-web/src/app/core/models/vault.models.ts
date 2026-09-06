@@ -62,3 +62,22 @@ export type DocumentUploadEvent =
   | { type: 'progress'; uploadPercent: number; securePercent: number }
   | { type: 'processing' }
   | { type: 'complete'; document: DocumentDto };
+
+export interface CredentialDto {
+  id: number;
+  title: string;
+  username: string;
+  password: string;
+  website: string | null;
+  notes: string | null;
+}
+
+export interface CreateCredentialRequest {
+  title: string;
+  username: string;
+  password: string;
+  website: string | null;
+  notes: string | null;
+}
+
+export type UpdateCredentialRequest = CreateCredentialRequest;
