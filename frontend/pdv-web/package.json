@@ -1,6 +1,6 @@
 {
   "name": "pdv-web",
-  "version": "1.0.0-phase3",
+  "version": "1.0.1-phase4-buildfix",
   "private": true,
   "scripts": {
     "ng": "ng",

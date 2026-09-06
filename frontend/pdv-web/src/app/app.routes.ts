@@ -49,6 +49,7 @@ export const routes: Routes = [
   },
 
   // Legacy URL aliases ease the transition from the old wwwroot HTML frontend.
+  { path: 'html/dashboard.html', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'html/login.html', redirectTo: 'login', pathMatch: 'full' },
   { path: 'html/register.html', redirectTo: 'register', pathMatch: 'full' },
   { path: 'html/verify-email.html', redirectTo: 'verify-email', pathMatch: 'full' },

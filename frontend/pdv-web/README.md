@@ -1,6 +1,6 @@
-# Personal Digital Vault — Angular Migration Phase 3
+# Personal Digital Vault — Angular Migration Phase 4
 
-This is the cumulative Angular frontend after Phase 1 + Phase 2 + Phase 3. It runs side-by-side with the existing ASP.NET Core 8 Web API. Backend/database/encryption/payment contracts are unchanged.
+This is the cumulative Angular frontend after Phase 1 + Phase 2 + Phase 3 + Phase 4. It runs side-by-side with the existing ASP.NET Core 8 Web API. Backend/database/encryption/payment contracts remain unchanged.
 
 ## Frozen compatibility decisions
 
@@ -10,22 +10,21 @@ This is the cumulative Angular frontend after Phase 1 + Phase 2 + Phase 3. It ru
 - Final access JWT: `localStorage['pdv_token']` (existing project behavior preserved)
 - Registration/TOTP/MFA temporary values: `sessionStorage` only
 - Password-reset token: component memory only; never browser storage
-- ASP.NET API remains the final authority for authentication/authorization
-- Existing legacy CSS stays in `src/styles/legacy` until feature parity is complete
+- ASP.NET API remains the authority for authentication/authorization
+- Existing legacy CSS remains under `src/styles/legacy` until each feature reaches parity
 
-## Phase 3 implemented
+## Phase 4 implemented
 
-- Full registration validation UX
-- Email OTP verify + resend
-- Authenticator/TOTP QR setup + manual key
-- TOTP setup verification and temporary-secret cleanup
-- Login password -> MFA challenge -> TOTP -> final JWT
-- Safe post-login redirect consumption
-- Forgot-password generic-response flow
-- Reset-password fragment-token flow with immediate URL cleanup
-- Central `AuthFlowStorageService` for temporary auth state
-- Legacy HTML auth route aliases for gradual migration
-- Shared validation/loading/error UX additions
+- Full Angular Dashboard V2 replacing the placeholder
+- Typed `DashboardResponse` model tree
+- Real `GET /api/dashboard` integration
+- Summary cards, storage quota/progress and warnings
+- PayPal/Stripe-aware plan/billing metadata and Angular billing routes
+- Quick actions with Angular Router links
+- Recent documents and recent folders
+- Security status checks
+- Loading, empty, error, retry and manual refresh UX
+- `/html/dashboard.html` migration alias
 
 ## Prerequisites
 
@@ -36,30 +35,10 @@ Use a Node version supported by this Angular 22 package configuration: `^22.22.3
 1. Start the original ASP.NET Core API.
 2. Open `frontend/pdv-web`.
 3. Run `npm install`.
-4. Run `npm start`.
-5. Open `http://localhost:4200`.
+4. Run `npm run build`.
+5. Run `npm start`.
+6. Open `http://localhost:4200/dashboard`.
 
 The dev server proxies `/api/*` to `https://localhost:7240` through `proxy.conf.json`.
 
-## Phase 3 auth routes
-
-- `/login`
-- `/register`
-- `/verify-email`
-- `/setup-totp`
-- `/verify-login-otp`
-- `/verify-login-totp` (alias)
-- `/forgot-password`
-- `/reset-password#token=...`
-
-Legacy auth URL aliases are included to ease the future switch away from ASP.NET `wwwroot/html/*.html`.
-
-## Important reset-email development note
-
-The current backend still creates reset emails pointing to its old `https://localhost:7240/html/reset-password.html#token=...` page. While `wwwroot` remains active, that email will still open the legacy reset screen. The Angular alias is already prepared for the final Angular static-host/base-URL integration phase.
-
-Do not remove the original `wwwroot` frontend yet.
-
-## Next phase
-
-Phase 4 migrates the Dashboard with real API integration and production loading/empty/error/responsive states.
+Do not remove the original `wwwroot` frontend yet because remaining feature pages will be migrated in later phases.
