@@ -21,6 +21,7 @@ export const routes: Routes = [
   { path: 'setup-totp', loadComponent: () => import('./features/auth/setup-totp/setup-totp.component').then(m => m.SetupTotpComponent) },
   { path: 'verify-login-otp', loadComponent: () => import('./features/auth/verify-login-otp/verify-login-otp.component').then(m => m.VerifyLoginOtpComponent) },
   { path: 'verify-login-totp', redirectTo: 'verify-login-otp', pathMatch: 'full' },
+  { path: 'share-invitation', loadComponent: () => import('./features/sharing/share-invitation.component').then(m => m.ShareInvitationComponent) },
   {
     path: '',
     component: AppShellComponent,
@@ -53,6 +54,9 @@ export const routes: Routes = [
   { path: 'html/folders.html', redirectTo: 'vault/folders', pathMatch: 'full' },
   { path: 'html/documents.html', redirectTo: 'vault/documents', pathMatch: 'full' },
   { path: 'html/credentials.html', redirectTo: 'vault/credentials', pathMatch: 'full' },
+  { path: 'html/search.html', redirectTo: 'search', pathMatch: 'full' },
+  { path: 'html/shared-with-me.html', redirectTo: 'shared-with-me', pathMatch: 'full' },
+  { path: 'html/share-invitation.html', loadComponent: () => import('./features/sharing/share-invitation.component').then(m => m.ShareInvitationComponent) },
   { path: 'html/login.html', redirectTo: 'login', pathMatch: 'full' },
   { path: 'html/register.html', redirectTo: 'register', pathMatch: 'full' },
   { path: 'html/verify-email.html', redirectTo: 'verify-email', pathMatch: 'full' },

@@ -59,6 +59,7 @@ export class DocumentsComponent implements OnInit {
   readonly filterMode = signal('all');
   readonly actionBusyId = signal<number | null>(null);
   readonly details = signal<DocumentDto | null>(null);
+  readonly focusedDocumentId = signal<number | null>(null);
 
   readonly shareDocument = signal<DocumentDto | null>(null);
   readonly shares = signal<DocumentShareDto[]>([]);
@@ -120,6 +121,16 @@ export class DocumentsComponent implements OnInit {
         this.filterMode.set('root');
       } else {
         this.filterMode.set('all');
+      }
+
+      const documentId = Number(params.get('documentId'));
+      if (Number.isInteger(documentId) && documentId > 0) {
+        if (this.focusedDocumentId() !== documentId) {
+          this.focusedDocumentId.set(documentId);
+          this.loadDetailsById(documentId, true);
+        }
+      } else {
+        this.focusedDocumentId.set(null);
       }
     });
 
@@ -278,9 +289,21 @@ export class DocumentsComponent implements OnInit {
   }
 
   showDetails(document: DocumentDto): void {
-    this.actionBusyId.set(document.id);
-    this.documentsApi.get(document.id).pipe(finalize(() => this.actionBusyId.set(null))).subscribe({
-      next: details => this.details.set(details),
+    this.focusedDocumentId.set(document.id);
+    this.loadDetailsById(document.id, true);
+  }
+
+  private loadDetailsById(documentId: number, scrollIntoView = false): void {
+    if (!Number.isInteger(documentId) || documentId <= 0 || this.actionBusyId() !== null) return;
+
+    this.actionBusyId.set(documentId);
+    this.documentsApi.get(documentId).pipe(finalize(() => this.actionBusyId.set(null))).subscribe({
+      next: details => {
+        this.details.set(details);
+        if (scrollIntoView) {
+          window.requestAnimationFrame(() => document.getElementById('document-details-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+        }
+      },
       error: error => this.notifications.error(this.message(error, 'Document details could not be loaded.'))
     });
   }

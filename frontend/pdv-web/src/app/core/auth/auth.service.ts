@@ -20,6 +20,7 @@ import {
 } from '../models/auth.models';
 import { AuthFlowStorageService } from './auth-flow-storage.service';
 import { TokenService } from './token.service';
+import { STORAGE_KEYS } from '../storage/storage-keys';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -76,5 +77,7 @@ export class AuthService {
     // Legacy Phase 0/1 values are removed during migration as well.
     sessionStorage.removeItem('pdv_role');
     sessionStorage.removeItem('pdv_user');
+    sessionStorage.removeItem(STORAGE_KEYS.pendingShareToken);
+    sessionStorage.removeItem(STORAGE_KEYS.shareSuccess);
   }
 }

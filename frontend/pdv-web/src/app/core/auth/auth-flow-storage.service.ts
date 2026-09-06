@@ -121,6 +121,10 @@ export class AuthFlowStorageService {
     return this.isSafeLocalPath(value) ? value : fallback;
   }
 
+  clearPostLoginRedirect(): void {
+    sessionStorage.removeItem(STORAGE_KEYS.postLoginRedirect);
+  }
+
   clearAll(): void {
     this.clearRegistrationFlow();
     this.clearLoginChallenge();
