@@ -1,0 +1,62 @@
+<main class="auth-wrap">
+  <section class="auth-visual">
+    <div class="auth-brand"><span class="brand-mark">🔒</span> Personal Digital Vault</div>
+    <div class="auth-hero">
+      <span class="eyebrow">Start securely</span>
+      <h1>Your personal vault starts with one account.</h1>
+      <p>Create an account, verify your email, then protect access with an authenticator app before entering the vault.</p>
+      <div class="security-pills">
+        <span class="security-pill">Email ownership verification</span>
+        <span class="security-pill">Authenticator protected</span>
+        <span class="security-pill">Private ownership controls</span>
+      </div>
+    </div>
+    <div class="auth-foot">Personal Digital Vault • Your data, your access</div>
+  </section>
+
+  <section class="auth-panel">
+    <div class="auth-card">
+      <span class="eyebrow">Create account</span>
+      <h2>Set up your vault</h2>
+      <p class="auth-card__intro">Registration continues with email verification and two-factor authentication.</p>
+
+      @if (message()) {
+        <app-ui-alert [message]="message()" tone="error" />
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="field">
+          <label for="registerName">Full name</label>
+          <input id="registerName" formControlName="fullName" autocomplete="name" placeholder="Your full name">
+          @if (form.controls.fullName.touched && form.controls.fullName.invalid) {
+            <small class="field-error">Full name is required.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="registerEmail">Email address</label>
+          <input id="registerEmail" formControlName="email" type="email" autocomplete="email" placeholder="name@example.com">
+          @if (form.controls.email.touched && form.controls.email.invalid) {
+            <small class="field-error">Enter a valid email address.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="registerPassword">Password</label>
+          <input id="registerPassword" formControlName="password" type="password" autocomplete="new-password" placeholder="Minimum 8 characters">
+          @if (form.controls.password.touched && form.controls.password.hasError('required')) {
+            <small class="field-error">Password is required.</small>
+          } @else if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
+            <small class="field-error">Use at least 8 characters.</small>
+          }
+        </div>
+
+        <button type="submit" [disabled]="loading()">
+          {{ loading() ? 'Creating account…' : 'Create account' }}
+        </button>
+      </form>
+
+      <div class="auth-card__footer">Already registered? <a routerLink="/login">Sign in</a></div>
+    </div>
+  </section>
+</main>
