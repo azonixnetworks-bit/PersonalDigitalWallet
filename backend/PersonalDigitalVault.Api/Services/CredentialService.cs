@@ -64,20 +64,19 @@ public class CredentialService : ICredentialService
     //
     // Input:
     // Credential entity
-    // revealSensitive
+    // revealPassword
     //
     // Output:
     // CredentialDto
     //
     // Security:
     // Password default-a masked.
-    // Secure notes default-a omitted from list/create/update responses.
     //
     // Single credential details endpoint mattum
-    // revealSensitive = true use pannum.
+    // revealPassword = true use pannum.
     private CredentialDto Map(
         Credential credential,
-        bool revealSensitive = false)
+        bool revealPassword = false)
     {
         return new CredentialDto
         {
@@ -92,7 +91,7 @@ public class CredentialService : ICredentialService
                     credential.UsernameEncrypted),
 
             Password =
-                revealSensitive
+                revealPassword
                     ? _aes.DecryptString(
                         credential.PasswordEncrypted)
                     : "••••••••",
@@ -101,12 +100,11 @@ public class CredentialService : ICredentialService
                 credential.Website,
 
             Notes =
-                revealSensitive
-                    && !string.IsNullOrEmpty(
+                string.IsNullOrEmpty(
+                    credential.NotesEncrypted)
+                    ? null
+                    : _aes.DecryptString(
                         credential.NotesEncrypted)
-                        ? _aes.DecryptString(
-                            credential.NotesEncrypted)
-                        : null
         };
     }
 
@@ -195,7 +193,6 @@ public class CredentialService : ICredentialService
     // Repository userId filter use pannum.
     //
     // Password list-la reveal panna maatom.
-    // Secure notes-um list response-la decrypt/send panna maatom.
     public async Task<List<CredentialDto>>
         GetAllAsync()
     {
@@ -262,7 +259,7 @@ public class CredentialService : ICredentialService
 
         return Map(
             credential,
-            revealSensitive: true);
+            revealPassword: true);
     }
 
 
