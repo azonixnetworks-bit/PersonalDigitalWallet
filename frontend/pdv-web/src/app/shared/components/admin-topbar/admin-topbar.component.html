@@ -1,11 +1,13 @@
-<header class="admin-topbar">
-  <div class="admin-topbar__inner">
+<aside class="admin-sidebar">
+  <div class="admin-sidebar__brand-row">
     <app-brand [admin]="true" />
     <button class="admin-menu-toggle" type="button" [attr.aria-expanded]="menuOpen()" aria-controls="adminPrimaryNavigation" aria-label="Toggle admin navigation" (click)="toggleMenu()">☰</button>
-    <nav id="adminPrimaryNavigation" class="admin-nav" [class.nav-open]="menuOpen()" aria-label="Admin navigation">
-      <a class="admin-nav-link" routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Overview</a>
-      <a class="admin-nav-link" routerLink="/admin/subscriptions" routerLinkActive="active" (click)="closeMenu()">Billing Metadata</a>
-      <button type="button" class="admin-logout" [disabled]="loggingOut()" (click)="logout()">{{ loggingOut() ? 'Signing out…' : 'Logout' }}</button>
-    </nav>
   </div>
-</header>
+  <nav id="adminPrimaryNavigation" class="admin-nav" [class.nav-open]="menuOpen()" aria-label="Admin navigation">
+    <span class="admin-nav__label">Administration</span>
+    <a class="admin-nav-link" routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()"><span class="admin-nav-icon" aria-hidden="true">⌂</span><span>Overview</span></a>
+    <a class="admin-nav-link" routerLink="/admin/subscriptions" routerLinkActive="active" (click)="closeMenu()"><span class="admin-nav-icon" aria-hidden="true">▤</span><span>Billing Metadata</span></a>
+    <button type="button" class="admin-logout" [disabled]="loggingOut()" (click)="logout()"><span class="admin-nav-icon" aria-hidden="true">↪</span><span>{{ loggingOut() ? 'Signing out…' : 'Logout' }}</span></button>
+  </nav>
+  <div class="admin-sidebar__notice"><span aria-hidden="true">◆</span><div><strong>Privacy boundary</strong><small>Admins cannot read vault contents</small></div></div>
+</aside>
