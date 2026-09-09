@@ -1,0 +1,191 @@
+<section class="billing-page">
+  <div class="billing-header-row">
+    <app-page-header
+      eyebrow="BILLING & PLAN"
+      title="Subscription"
+      subtitle="Manage your vault plan, usage limits and Stripe billing securely." />
+
+    <button class="secondary-button refresh-button" type="button" [disabled]="loading() || refreshing()" (click)="refresh()">
+      {{ refreshing() ? 'Refreshing…' : 'Refresh' }}
+    </button>
+  </div>
+
+  @if (error()) {
+    <app-ui-alert [message]="error()" tone="error" />
+  }
+  @if (configWarning()) {
+    <app-ui-alert [message]="configWarning()" tone="warning" />
+  }
+  @if (info()) {
+    <app-ui-alert [message]="info()" tone="info" />
+  }
+  @if (success()) {
+    <app-ui-alert [message]="success()" tone="success" />
+  }
+
+  @if (loading()) {
+    <div class="loading-card">
+      <app-ui-loader label="Loading subscription and vault limits…" />
+    </div>
+  } @else {
+    <section class="overview-grid" aria-label="Current subscription overview">
+      <article class="surface-card plan-overview-card">
+        <div class="card-heading-row">
+          <div>
+            <span class="eyebrow">CURRENT PLAN</span>
+            <h2>{{ entitlement()?.planName || subscription()?.planName || 'Free' }}</h2>
+          </div>
+          <span class="status-badge" [class]="'status-badge ' + statusClass()">{{ status() }}</span>
+        </div>
+
+        <div class="plan-meta-grid">
+          <div class="meta-item">
+            <span>Provider</span>
+            <strong>{{ subscription()?.provider || entitlement()?.provider || (isPremium() ? 'Verified provider' : 'No recurring billing') }}</strong>
+          </div>
+          <div class="meta-item">
+            <span>Next billing</span>
+            <strong>{{ formatDate(subscription()?.nextBillingDate || entitlement()?.nextBillingDate) }}</strong>
+          </div>
+          <div class="meta-item">
+            <span>Cancellation</span>
+            <strong>{{ (subscription()?.cancelAtPeriodEnd || entitlement()?.cancelAtPeriodEnd) ? 'Scheduled for period end' : 'Not scheduled' }}</strong>
+          </div>
+          <div class="meta-item">
+            <span>Upload access</span>
+            <strong>{{ entitlement()?.canUpload === false ? 'Limit reached' : 'Available' }}</strong>
+          </div>
+        </div>
+
+        <div class="plan-actions">
+          @if (canManageBilling()) {
+            <button class="secondary-button" type="button" [disabled]="portalBusy()" (click)="openBillingPortal()">
+              {{ portalBusy() ? 'Opening portal…' : 'Manage Billing' }}
+            </button>
+          }
+        </div>
+      </article>
+
+      <article class="surface-card security-card">
+        <span class="eyebrow">SECURE BILLING</span>
+        <div class="security-icon" aria-hidden="true">✓</div>
+        <h2>Stripe-hosted payments</h2>
+        <p>Card details are collected by Stripe Checkout and are never entered into or stored by Personal Digital Vault.</p>
+        <div class="security-line"><span>Checkout</span><strong>Stripe hosted</strong></div>
+        <div class="security-line"><span>Premium authority</span><strong>PDV backend verified</strong></div>
+        <div class="security-line"><span>Sync</span><strong>Signed webhook + server verification</strong></div>
+      </article>
+    </section>
+
+    @if (entitlement()) {
+      <section class="usage-section">
+        <div class="section-title-row">
+          <div>
+            <span class="eyebrow">VAULT ALLOWANCE</span>
+            <h2>Your current usage</h2>
+          </div>
+          <span class="usage-plan-pill">{{ entitlement()!.planName }}</span>
+        </div>
+
+        <div class="usage-grid">
+          <article class="surface-card usage-card">
+            <div class="usage-card-head">
+              <div>
+                <span>Documents</span>
+                <strong>{{ entitlement()!.currentDocuments }} / {{ entitlement()!.maxDocuments }}</strong>
+              </div>
+              <span>{{ documentPercent() }}%</span>
+            </div>
+            <div class="progress-track" aria-label="Document usage">
+              <span class="progress-fill" [style.width.%]="documentPercent()"></span>
+            </div>
+            <p>{{ entitlement()!.maxDocuments - entitlement()!.currentDocuments > 0 ? (entitlement()!.maxDocuments - entitlement()!.currentDocuments) : 0 }} document slots remaining.</p>
+          </article>
+
+          <article class="surface-card usage-card">
+            <div class="usage-card-head">
+              <div>
+                <span>Encrypted storage</span>
+                <strong>{{ formatBytes(entitlement()!.storageUsedBytes) }} / {{ formatBytes(entitlement()!.storageLimitBytes) }}</strong>
+              </div>
+              <span>{{ storagePercent() }}%</span>
+            </div>
+            <div class="progress-track" aria-label="Storage usage">
+              <span class="progress-fill" [style.width.%]="storagePercent()"></span>
+            </div>
+            <p>{{ formatBytes(entitlement()!.storageRemainingBytes) }} remaining · Maximum {{ formatBytes(entitlement()!.maxUploadBytes) }} per upload.</p>
+          </article>
+        </div>
+      </section>
+    }
+
+    <section class="plans-section">
+      <div class="section-title-row">
+        <div>
+          <span class="eyebrow">PLAN OPTIONS</span>
+          <h2>Choose the right vault plan</h2>
+        </div>
+        @if (config()) {
+          <span class="environment-pill">{{ config()!.provider || 'Stripe' }} · {{ config()!.environment || 'Sandbox' }}</span>
+        }
+      </div>
+
+      <div class="plans-grid">
+        <article class="plan-card free-plan">
+          <div class="plan-icon" aria-hidden="true">◇</div>
+          <span class="eyebrow">FREE</span>
+          <h3>Secure essentials</h3>
+          <div class="price-line"><strong>Free</strong><span>No recurring payment</span></div>
+          <ul>
+            <li>Encrypted document vault</li>
+            <li>Secure folders and sharing</li>
+            <li>Encrypted credentials vault</li>
+            <li>Email verification and authenticator MFA</li>
+            <li>Backend-enforced storage and document limits</li>
+          </ul>
+          @if (!isPremium()) {
+            <div class="current-plan-marker">Current plan</div>
+          }
+        </article>
+
+        <article class="plan-card premium-plan">
+          <div class="premium-ribbon">PREMIUM</div>
+          <div class="plan-icon premium-icon" aria-hidden="true">★</div>
+          <span class="eyebrow">{{ config()?.planName || 'PREMIUM' }}</span>
+          <h3>Expanded encrypted vault</h3>
+          <div class="price-line">
+            <strong>{{ formatMoney(config()) }}</strong>
+            <span>{{ billingInterval(config()) }}</span>
+          </div>
+          <ul>
+            <li>Expanded backend-enforced vault capacity</li>
+            <li>Stripe-hosted secure Checkout</li>
+            <li>Stripe Customer Portal for billing management</li>
+            <li>Signed webhook subscription synchronization</li>
+            <li>Premium access only after server-side verification</li>
+          </ul>
+
+          @if (isPremium()) {
+            <div class="premium-active-box">✓ Premium subscription is active</div>
+          } @else if (billingProblem()) {
+            <div class="billing-warning-box">Billing action is required. Use Manage Billing when available.</div>
+            @if (canManageBilling()) {
+              <button class="primary-button" type="button" [disabled]="portalBusy()" (click)="openBillingPortal()">
+                {{ portalBusy() ? 'Opening portal…' : 'Resolve in Stripe Portal' }}
+              </button>
+            }
+          } @else {
+            <button class="primary-button" type="button" [disabled]="!canUpgrade() || checkoutBusy()" (click)="startCheckout()">
+              {{ checkoutBusy() ? 'Opening Stripe Checkout…' : 'Upgrade with Stripe' }}
+            </button>
+            @if (!config()) {
+              <p class="action-note">Stripe upgrade is temporarily unavailable until billing configuration loads.</p>
+            } @else {
+              <p class="action-note">You will continue on Stripe-hosted Checkout.</p>
+            }
+          }
+        </article>
+      </div>
+    </section>
+  }
+</section>
