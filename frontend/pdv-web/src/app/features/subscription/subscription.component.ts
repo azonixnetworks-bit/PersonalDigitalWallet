@@ -139,11 +139,11 @@ export class SubscriptionComponent {
 
     try {
       const formatter = new Intl.NumberFormat(undefined, { style: 'currency', currency });
-     const intlDigits =
-  formatter.resolvedOptions().maximumFractionDigits ?? 2;
+      const intlDigits =
+        formatter.resolvedOptions().maximumFractionDigits ?? 2;
 
-const stripeDigits: number =
-  ['ISK', 'UGX'].includes(currency) ? 2 : intlDigits;
+      const stripeDigits: number =
+        ['ISK', 'UGX'].includes(currency) ? 2 : intlDigits;
       return formatter.format(amount / (10 ** stripeDigits));
     }
     catch {
@@ -169,9 +169,9 @@ const stripeDigits: number =
   }
 
   formatDate(value: string | null | undefined): string {
-    if (!value) return 'â€”';
+    if (!value) return '—';
     const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return 'â€”';
+    if (Number.isNaN(date.getTime())) return '—';
     return new Intl.DateTimeFormat(undefined, {
       year: 'numeric',
       month: 'short',
@@ -200,7 +200,7 @@ const stripeDigits: number =
 
     if (checkout === 'success' && sessionId) {
       this.verifyingCheckout.set(true);
-      this.info.set('Payment completed. Verifying your subscription securely with the PDV backendâ€¦');
+      this.info.set('Payment completed. Verifying your subscription securely with the PDV backend…');
 
       this.subscriptionService.verifyCheckout(sessionId).pipe(
         take(1),
