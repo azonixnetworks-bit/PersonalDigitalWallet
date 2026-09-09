@@ -59,6 +59,8 @@ export const routes: Routes = [
   { path: 'html/profile.html', redirectTo: 'profile', pathMatch: 'full' },
   { path: 'html/subscription.html', redirectTo: 'subscription', pathMatch: 'full' },
   { path: 'html/stripe-subscription.html', redirectTo: 'subscription', pathMatch: 'full' },
+  { path: 'html/admin.html', redirectTo: 'admin', pathMatch: 'full' },
+  { path: 'html/admin-subscriptions.html', redirectTo: 'admin/subscriptions', pathMatch: 'full' },
   { path: 'html/share-invitation.html', loadComponent: () => import('./features/sharing/share-invitation.component').then(m => m.ShareInvitationComponent) },
   { path: 'html/login.html', redirectTo: 'login', pathMatch: 'full' },
   { path: 'html/register.html', redirectTo: 'register', pathMatch: 'full' },

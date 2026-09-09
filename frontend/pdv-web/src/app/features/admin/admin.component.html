@@ -1,0 +1,187 @@
+<section class="admin-page" aria-labelledby="adminOverviewTitle">
+  <header class="page-heading">
+    <div>
+      <span class="eyebrow">ADMIN CONSOLE</span>
+      <h1 id="adminOverviewTitle">System Overview</h1>
+      <p>Monitor account activity and safe vault metadata without accessing private vault contents.</p>
+    </div>
+
+    <button type="button" class="btn btn-secondary" [disabled]="loading()" (click)="loadAll()">
+      {{ loading() ? 'Refreshing...' : 'Refresh' }}
+    </button>
+  </header>
+
+  <div *ngIf="error()" class="alert alert-error" role="alert">
+    <div>
+      <strong>Admin data unavailable</strong>
+      <span>{{ error() }}</span>
+    </div>
+    <button type="button" class="alert-action" (click)="loadAll()">Retry</button>
+  </div>
+
+  <div *ngIf="info()" class="alert alert-success" role="status" aria-live="polite">
+    <div>
+      <strong>Account updated</strong>
+      <span>{{ info() }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="loading() && !dashboard()" class="loading-panel" role="status">
+    <span class="spinner" aria-hidden="true"></span>
+    <div>
+      <strong>Loading administrator dashboard</strong>
+      <span>Reading safe account and upload metadata...</span>
+    </div>
+  </div>
+
+  <ng-container *ngIf="dashboard() as data">
+    <section class="stats-grid" aria-label="System statistics">
+      <article class="stat-card">
+        <span class="stat-icon" aria-hidden="true">U</span>
+        <div>
+          <span class="stat-label">Total Users</span>
+          <strong>{{ data.totalUsers }}</strong>
+          <small>Registered accounts</small>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <span class="stat-icon" aria-hidden="true">A</span>
+        <div>
+          <span class="stat-label">Total Uploads</span>
+          <strong>{{ data.totalUploads }}</strong>
+          <small>Upload records</small>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <span class="stat-icon" aria-hidden="true">S</span>
+        <div>
+          <span class="stat-label">Stored Files</span>
+          <strong>{{ data.totalStoredFiles }}</strong>
+          <small>Current stored documents</small>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel" aria-labelledby="usersTitle">
+      <div class="panel-heading panel-heading-toolbar">
+        <div>
+          <span class="eyebrow">ACCOUNT MANAGEMENT</span>
+          <h2 id="usersTitle">User Accounts</h2>
+          <p>Search registered accounts and control normal user access.</p>
+        </div>
+
+        <label class="search-field">
+          <span class="sr-only">Search users</span>
+          <input
+            type="search"
+            [value]="query()"
+            (input)="onSearch($event)"
+            placeholder="Search name, email or role..."
+            autocomplete="off"
+          />
+        </label>
+      </div>
+
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Role</th>
+              <th scope="col">Status</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="refreshingUsers()">
+              <td colspan="5" class="table-message">Refreshing user list...</td>
+            </tr>
+
+            <tr *ngFor="let user of filteredUsers()">
+              <td data-label="Name">
+                <strong class="cell-primary">{{ user.fullName || '-' }}</strong>
+              </td>
+              <td data-label="Email">{{ user.email || '-' }}</td>
+              <td data-label="Role">
+                <span class="badge" [class.badge-admin]="isAdminRole(user.role)">
+                  {{ user.role || 'User' }}
+                </span>
+              </td>
+              <td data-label="Status">
+                <span class="badge" [class.badge-active]="user.isActive" [class.badge-disabled]="!user.isActive">
+                  {{ user.isActive ? 'Active' : 'Disabled' }}
+                </span>
+              </td>
+              <td data-label="Action">
+                <span *ngIf="isAdminRole(user.role); else userAction" class="protected-label">Protected</span>
+                <ng-template #userAction>
+                  <button
+                    type="button"
+                    class="btn btn-small"
+                    [class.btn-danger-soft]="user.isActive"
+                    [class.btn-success-soft]="!user.isActive"
+                    [disabled]="pendingUserId() !== null"
+                    (click)="toggleUserStatus(user)"
+                  >
+                    {{ pendingUserId() === user.id ? 'Saving...' : (user.isActive ? 'Disable' : 'Enable') }}
+                  </button>
+                </ng-template>
+              </td>
+            </tr>
+
+            <tr *ngIf="!refreshingUsers() && filteredUsers().length === 0">
+              <td colspan="5" class="table-message">
+                {{ query().trim() ? 'No matching users found.' : 'No user accounts found.' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="uploadsTitle">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow">FILE METADATA</span>
+          <h2 id="uploadsTitle">Recent Upload Activity</h2>
+          <p>Metadata only. This page does not expose storage paths, file contents, credentials, preview or download actions.</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th scope="col">Uploaded By</th>
+              <th scope="col">File Name</th>
+              <th scope="col">File Size</th>
+              <th scope="col">Uploaded At</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let upload of data.recentUploads">
+              <td data-label="Uploaded By">{{ upload.uploadedBy }}</td>
+              <td data-label="File Name"><strong class="cell-primary">{{ upload.fileName }}</strong></td>
+              <td data-label="File Size">{{ formatBytes(upload.fileSize) }}</td>
+              <td data-label="Uploaded At">{{ formatDate(upload.uploadedAt) }}</td>
+            </tr>
+            <tr *ngIf="data.recentUploads.length === 0">
+              <td colspan="4" class="table-message">No recent upload activity found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <aside class="privacy-card" aria-label="Administrator privacy boundary">
+      <span class="privacy-mark" aria-hidden="true">P</span>
+      <div>
+        <strong>Privacy boundary enforced</strong>
+        <p>Administrators receive account and file metadata only. Private vault contents and credential values remain outside this interface.</p>
+      </div>
+    </aside>
+  </ng-container>
+</section>

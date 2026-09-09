@@ -1,0 +1,133 @@
+<section class="admin-page" aria-labelledby="billingTitle">
+  <header class="page-heading">
+    <div>
+      <span class="eyebrow">BILLING METADATA</span>
+      <h1 id="billingTitle">Subscription Administration</h1>
+      <p>Read-only subscription visibility using backend-masked billing metadata.</p>
+    </div>
+
+    <button type="button" class="btn btn-secondary" [disabled]="loading()" (click)="loadBillingData()">
+      {{ loading() ? 'Refreshing...' : 'Refresh' }}
+    </button>
+  </header>
+
+  <div *ngIf="error()" class="alert alert-error" role="alert">
+    <div>
+      <strong>Billing data unavailable</strong>
+      <span>{{ error() }}</span>
+    </div>
+    <button type="button" class="alert-action" (click)="loadBillingData()">Retry</button>
+  </div>
+
+  <div *ngIf="loading() && !summary()" class="loading-panel" role="status">
+    <span class="spinner" aria-hidden="true"></span>
+    <div>
+      <strong>Loading subscription metadata</strong>
+      <span>Reading safe billing summary and masked subscription references...</span>
+    </div>
+  </div>
+
+  <ng-container *ngIf="summary() as data">
+    <section class="stats-grid stats-grid-billing" aria-label="Subscription statistics">
+      <article class="stat-card">
+        <span class="stat-icon" aria-hidden="true">U</span>
+        <div><span class="stat-label">Total Users</span><strong>{{ data.totalUsers }}</strong><small>Normal vault users</small></div>
+      </article>
+      <article class="stat-card">
+        <span class="stat-icon" aria-hidden="true">P</span>
+        <div><span class="stat-label">Premium Users</span><strong>{{ data.premiumUsers }}</strong><small>Active Premium accounts</small></div>
+      </article>
+      <article class="stat-card">
+        <span class="stat-icon" aria-hidden="true">F</span>
+        <div><span class="stat-label">Free Users</span><strong>{{ data.freeUsers }}</strong><small>Without active Premium</small></div>
+      </article>
+      <article class="stat-card">
+        <span class="stat-icon" aria-hidden="true">R</span>
+        <div><span class="stat-label">Records</span><strong>{{ data.totalSubscriptionRecords }}</strong><small>Historical subscription records</small></div>
+      </article>
+      <article class="stat-card compact-stat">
+        <span class="stat-label">Active</span><strong>{{ data.activeSubscriptions }}</strong>
+      </article>
+      <article class="stat-card compact-stat">
+        <span class="stat-label">Cancelled</span><strong>{{ data.cancelledSubscriptions }}</strong>
+      </article>
+      <article class="stat-card compact-stat">
+        <span class="stat-label">Suspended</span><strong>{{ data.suspendedSubscriptions }}</strong>
+      </article>
+      <article class="stat-card compact-stat">
+        <span class="stat-label">Expired</span><strong>{{ data.expiredSubscriptions }}</strong>
+      </article>
+    </section>
+
+    <section class="panel" aria-labelledby="subscriptionRecordsTitle">
+      <div class="panel-heading panel-heading-toolbar">
+        <div>
+          <span class="eyebrow">READ ONLY</span>
+          <h2 id="subscriptionRecordsTitle">Subscription Records</h2>
+          <p>Provider references are masked by the backend before they reach this interface.</p>
+        </div>
+
+        <label class="search-field">
+          <span class="sr-only">Search subscriptions</span>
+          <input
+            type="search"
+            [value]="query()"
+            (input)="onSearch($event)"
+            placeholder="Search user, provider, plan or status..."
+            autocomplete="off"
+          />
+        </label>
+      </div>
+
+      <div class="table-wrap">
+        <table class="admin-table admin-table-wide">
+          <thead>
+            <tr>
+              <th scope="col">User</th>
+              <th scope="col">Email</th>
+              <th scope="col">Provider</th>
+              <th scope="col">Plan</th>
+              <th scope="col">Status</th>
+              <th scope="col">Masked Reference</th>
+              <th scope="col">Next Billing</th>
+              <th scope="col">Last Verified</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let subscription of filteredSubscriptions()">
+              <td data-label="User">
+                <strong class="cell-primary">{{ subscription.userName || ('User ' + subscription.userId) }}</strong>
+              </td>
+              <td data-label="Email">{{ subscription.maskedEmail || '-' }}</td>
+              <td data-label="Provider">{{ subscription.provider || '-' }}</td>
+              <td data-label="Plan">{{ subscription.planName || '-' }}</td>
+              <td data-label="Status">
+                <span class="badge" [ngClass]="statusClass(subscription.status)">
+                  {{ subscription.status || 'UNKNOWN' }}
+                </span>
+                <small *ngIf="subscription.cancelAtPeriodEnd" class="subtle-note">Cancels at period end</small>
+              </td>
+              <td data-label="Masked Reference"><code class="masked-ref">{{ providerReference(subscription) }}</code></td>
+              <td data-label="Next Billing">{{ formatDate(subscription.nextBillingDate) }}</td>
+              <td data-label="Last Verified">{{ formatDate(subscription.lastVerifiedAt) }}</td>
+            </tr>
+
+            <tr *ngIf="filteredSubscriptions().length === 0">
+              <td colspan="8" class="table-message">
+                {{ query().trim() ? 'No matching subscription records found.' : 'No subscription records found.' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <aside class="privacy-card" aria-label="Billing administration boundary">
+      <span class="privacy-mark" aria-hidden="true">R</span>
+      <div>
+        <strong>Read-only billing administration</strong>
+        <p>This Angular page does not activate, cancel or modify subscriptions and does not expose provider secrets or raw provider identifiers.</p>
+      </div>
+    </aside>
+  </ng-container>
+</section>
