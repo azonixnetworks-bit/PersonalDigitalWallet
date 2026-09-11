@@ -75,13 +75,13 @@ public class StripeService : IStripeService
         string stripeCustomerId)
     {
         StripePriceDetailsDto price = await GetValidatedConfiguredPriceAsync();
-        string baseUrl = GetRequiredConfiguration("App:BaseUrl").TrimEnd('/');
+       string frontendBaseUrl = GetFrontendBaseUrl();
 
-        string successUrl =
-            $"{baseUrl}/html/stripe-subscription.html?checkout=success&session_id={{CHECKOUT_SESSION_ID}}";
+string successUrl =
+    $"{frontendBaseUrl}/subscription?checkout=success&session_id={{CHECKOUT_SESSION_ID}}";
 
-        string cancelUrl =
-            $"{baseUrl}/html/stripe-subscription.html?checkout=cancelled";
+string cancelUrl =
+    $"{frontendBaseUrl}/subscription?checkout=cancelled";
 
         var form = new Dictionary<string, string>
         {
@@ -173,12 +173,13 @@ public class StripeService : IStripeService
             throw new InvalidOperationException("Stripe customer id is required.");
         }
 
-        string baseUrl = GetRequiredConfiguration("App:BaseUrl").TrimEnd('/');
+        //string baseUrl = GetRequiredConfiguration("App:BaseUrl").TrimEnd('/');
+        string frontendBaseUrl = GetFrontendBaseUrl();
 
         var form = new Dictionary<string, string>
         {
             ["customer"] = stripeCustomerId,
-            ["return_url"] = $"{baseUrl}/html/stripe-subscription.html"
+            ["return_url"] = $"{frontendBaseUrl}/subscription"
         };
 
         string idempotencyKey = $"pdv-portal-{Guid.NewGuid():N}";
@@ -257,6 +258,20 @@ public class StripeService : IStripeService
 
         return await ReadJsonResponseAsync(response, relativePath);
     }
+
+    private string GetFrontendBaseUrl()
+{
+    string? frontendBaseUrl =
+        _configuration["App:FrontendBaseUrl"]?.Trim();
+
+    if (string.IsNullOrWhiteSpace(frontendBaseUrl))
+    {
+        frontendBaseUrl =
+            GetRequiredConfiguration("App:BaseUrl");
+    }
+
+    return frontendBaseUrl.TrimEnd('/');
+}
 
     private HttpRequestMessage CreateRequest(HttpMethod method, string relativePath)
     {
