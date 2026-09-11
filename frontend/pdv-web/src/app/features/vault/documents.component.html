@@ -1,12 +1,24 @@
 <main class="vault-page documents-page">
+  @if (isFolderView()) {
+    <nav class="folder-breadcrumb" aria-label="Folder breadcrumb">
+      <a routerLink="/vault/folders">Folders</a>
+      <span aria-hidden="true">›</span>
+      <strong>{{ folderViewTitle() }}</strong>
+    </nav>
+  }
+
   <section class="vault-page-heading">
     <app-page-header
-      eyebrow="Encrypted file vault"
-      title="Documents"
-      subtitle="Upload protected files to Root Vault or organize them inside one of your folders." />
+      [eyebrow]="isFolderView() ? 'Private folder' : 'Encrypted file vault'"
+      [title]="isFolderView() ? folderViewTitle() : 'Documents'"
+      [subtitle]="isFolderView()
+        ? 'Files stored securely inside this private folder.'
+        : 'Upload protected files to Root Vault or organize them inside one of your folders.'" />
 
     <div class="vault-heading-actions">
-      <a class="btn btn--secondary" routerLink="/vault/folders">Manage folders</a>
+      <a class="btn btn--secondary" routerLink="/vault/folders">
+        {{ isFolderView() ? 'Back to folders' : 'Manage folders' }}
+      </a>
       <button class="btn btn--secondary" type="button" [disabled]="refreshing()" (click)="refresh()">
         {{ refreshing() ? 'Refreshing…' : 'Refresh' }}
       </button>
@@ -42,61 +54,83 @@
       </div>
 
       <div class="upload-location-column">
-        <fieldset class="upload-location-fieldset" [disabled]="uploading()">
-          <legend>Where should this file be stored?</legend>
+        @if (isFolderView()) {
+          <div class="folder-locked-destination" [class.is-unavailable]="!currentFolder() && !loadingFolders()">
+            <span class="folder-locked-icon" aria-hidden="true">📁</span>
+            <div>
+              <span class="vault-kicker">Current folder</span>
+              <strong>{{ folderViewTitle() }}</strong>
+              <small>
+                @if (loadingFolders()) {
+                  Confirming folder access…
+                } @else if (currentFolder()) {
+                  New uploads from this page are stored directly inside this folder.
+                } @else {
+                  This folder cannot be used. Return to Folders and choose an available folder.
+                }
+              </small>
+            </div>
+          </div>
+        } @else {
+          <fieldset class="upload-location-fieldset" [disabled]="uploading()">
+            <legend>Where should this file be stored?</legend>
 
-          <label class="upload-location-option">
-            <input
-              type="radio"
-              name="uploadLocation"
-              value="root"
-              [checked]="uploadLocation() === 'root'"
-              (change)="setUploadLocation('root')">
-            <span><strong>Root Vault</strong><small>Store securely without placing the file inside a folder.</small></span>
-          </label>
+            <label class="upload-location-option">
+              <input
+                type="radio"
+                name="uploadLocation"
+                value="root"
+                [checked]="uploadLocation() === 'root'"
+                (change)="setUploadLocation('root')">
+              <span><strong>Root Vault</strong><small>Store securely without placing the file inside a folder.</small></span>
+            </label>
 
-          <label class="upload-location-option">
-            <input
-              type="radio"
-              name="uploadLocation"
-              value="folder"
-              [checked]="uploadLocation() === 'folder'"
-              [disabled]="!foldersAvailable() || loadingFolders()"
-              (change)="setUploadLocation('folder')">
-            <span><strong>Inside a Folder</strong><small>Select one of your existing private folders.</small></span>
-          </label>
-        </fieldset>
+            <label class="upload-location-option">
+              <input
+                type="radio"
+                name="uploadLocation"
+                value="folder"
+                [checked]="uploadLocation() === 'folder'"
+                [disabled]="!foldersAvailable() || loadingFolders()"
+                (change)="setUploadLocation('folder')">
+              <span><strong>Inside a Folder</strong><small>Select one of your existing private folders.</small></span>
+            </label>
+          </fieldset>
 
-        <div class="folder-selection-area" [class.is-disabled]="uploadLocation() !== 'folder'">
-          <label for="folderId">Choose folder</label>
-          <select
-            id="folderId"
-            [disabled]="uploadLocation() !== 'folder' || uploading()"
-            [value]="selectedFolderId() ?? ''"
-            (change)="setSelectedFolder($any($event.target).value)">
-            <option value="">{{ foldersAvailable() ? 'Select a folder' : 'No folders available' }}</option>
-            @for (folder of folders(); track folder.id) {
-              <option [value]="folder.id">{{ folder.name }}</option>
-            }
-          </select>
-          <p class="folder-availability-message" aria-live="polite">
-            @if (loadingFolders()) {
-              Loading folders…
-            } @else if (foldersError()) {
-              {{ foldersError() }}
-            } @else if (folders().length === 0) {
-              No folders yet. Root Vault is ready, or create a folder first.
-            } @else {
-              {{ folders().length }} {{ folders().length === 1 ? 'folder' : 'folders' }} available.
-            }
-          </p>
-        </div>
+          <div class="folder-selection-area" [class.is-disabled]="uploadLocation() !== 'folder'">
+            <label for="folderId">Choose folder</label>
+            <select
+              id="folderId"
+              [disabled]="uploadLocation() !== 'folder' || uploading()"
+              [value]="selectedFolderId() ?? ''"
+              (change)="setSelectedFolder($any($event.target).value)">
+              <option value="">{{ foldersAvailable() ? 'Select a folder' : 'No folders available' }}</option>
+              @for (folder of folders(); track folder.id) {
+                <option [value]="folder.id">{{ folder.name }}</option>
+              }
+            </select>
+            <p class="folder-availability-message" aria-live="polite">
+              @if (loadingFolders()) {
+                Loading folders…
+              } @else if (foldersError()) {
+                {{ foldersError() }}
+              } @else if (folders().length === 0) {
+                No folders yet. Root Vault is ready, or create a folder first.
+              } @else {
+                {{ folders().length }} {{ folders().length === 1 ? 'folder' : 'folders' }} available.
+              }
+            </p>
+          </div>
+        }
       </div>
     </div>
 
     <div class="upload-footer">
       <p class="upload-destination">Upload destination: <strong>{{ uploadDestination() }}</strong></p>
-      <button type="button" [disabled]="uploading() || !selectedFile()" (click)="upload()">
+      <button
+        type="button"
+        [disabled]="uploading() || !selectedFile() || (isFolderView() && !currentFolder())"
+        (click)="upload()">
         {{ uploading() ? 'Securing document…' : 'Upload & Encrypt Document' }}
       </button>
     </div>
@@ -137,21 +171,42 @@
 
   <section class="documents-toolbar card">
     <div>
-      <span class="vault-kicker">Document view</span>
+      <span class="vault-kicker">{{ isFolderView() ? 'Inside folder' : 'Document view' }}</span>
       <strong>{{ listLabel() }}</strong>
-      <small>{{ filteredDocuments().length }} of {{ documents().length }} documents</small>
-    </div>
-    <label class="document-filter-label" for="documentFilter">
-      <span>Filter</span>
-      <select id="documentFilter" [value]="filterMode()" (change)="setFilter($any($event.target).value)">
-        <option value="all">All documents</option>
-        <option value="root">Root Vault</option>
-        @for (folder of folders(); track folder.id) {
-          <option [value]="'folder:' + folder.id">{{ folder.name }}</option>
+      <small>
+        @if (isFolderView()) {
+          {{ filteredDocuments().length }} {{ filteredDocuments().length === 1 ? 'file' : 'files' }} in this folder
+        } @else {
+          {{ filteredDocuments().length }} of {{ documents().length }} documents
         }
-      </select>
-    </label>
+      </small>
+    </div>
+
+    @if (isFolderView()) {
+      <a class="btn btn--secondary" routerLink="/vault/folders">Back to folders</a>
+    } @else {
+      <label class="document-filter-label" for="documentFilter">
+        <span>Filter</span>
+        <select id="documentFilter" [value]="filterMode()" (change)="setFilter($any($event.target).value)">
+          <option value="all">All documents</option>
+          <option value="root">Root Vault</option>
+          @for (folder of folders(); track folder.id) {
+            <option [value]="'folder:' + folder.id">{{ folder.name }}</option>
+          }
+        </select>
+      </label>
+    }
   </section>
+
+  @if (isFolderView() && foldersError()) {
+    <section class="card vault-error-card" role="alert">
+      <div>
+        <strong>Folder unavailable</strong>
+        <span>{{ foldersError() }}</span>
+      </div>
+      <a class="btn btn--secondary" routerLink="/vault/folders">Back to folders</a>
+    </section>
+  }
 
   @if (documentsError()) {
     <section class="card vault-error-card" role="alert">
@@ -172,8 +227,10 @@
       <div class="card vault-state-card">
         <app-ui-empty-state
           icon="📄"
-          title="No documents here"
-          description="Choose a file above and store it in Root Vault or one of your folders." />
+          [title]="isFolderView() ? 'No files in this folder' : 'No documents here'"
+          [description]="isFolderView()
+            ? 'Upload a document above and it will be encrypted and stored directly inside this folder.'
+            : 'Choose a file above and store it in Root Vault or one of your folders.'" />
       </div>
     } @else if (filteredDocuments().length > 0) {
       <div class="document-list">

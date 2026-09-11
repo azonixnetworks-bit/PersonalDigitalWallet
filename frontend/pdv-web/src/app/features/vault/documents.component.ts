@@ -47,6 +47,7 @@ export class DocumentsComponent implements OnInit {
   readonly refreshing = signal(false);
   readonly documentsError = signal('');
   readonly foldersError = signal('');
+  readonly routeFolderId = signal<number | null>(null);
 
   readonly selectedFile = signal<File | null>(null);
   readonly uploadLocation = signal<'root' | 'folder'>('root');
@@ -71,6 +72,17 @@ export class DocumentsComponent implements OnInit {
   });
 
   readonly foldersAvailable = computed(() => this.folders().length > 0);
+  readonly isFolderView = computed(() => this.routeFolderId() !== null);
+  readonly currentFolder = computed(() => {
+    const id = this.routeFolderId();
+    return id === null ? null : this.folders().find(folder => folder.id === id) ?? null;
+  });
+  readonly folderViewTitle = computed(() => {
+    if (!this.isFolderView()) return 'Documents';
+    const folder = this.currentFolder();
+    if (folder) return folder.name || 'Unnamed folder';
+    return this.loadingFolders() ? 'Loading folder...' : 'Folder unavailable';
+  });
   readonly uploadDestination = computed(() => {
     if (this.uploadLocation() !== 'folder') return 'Root Vault';
     const folder = this.folders().find(item => item.id === this.selectedFolderId());
@@ -113,14 +125,29 @@ export class DocumentsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       const folderId = Number(params.get('folderId'));
-      if (Number.isInteger(folderId) && folderId > 0) {
-        this.filterMode.set(`folder:${folderId}`);
-      } else if (params.get('location') === 'root') {
-        this.filterMode.set('root');
-      } else {
-        this.filterMode.set('all');
+      const validFolderId = Number.isInteger(folderId) && folderId > 0 ? folderId : null;
+
+      this.routeFolderId.set(validFolderId);
+
+      if (validFolderId !== null) {
+        this.filterMode.set(`folder:${validFolderId}`);
+        this.uploadLocation.set('folder');
+        this.selectedFolderId.set(validFolderId);
+      }
+    });
+
+    this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
+      if (this.routeFolderId() === null) {
+        const folderId = Number(params.get('folderId'));
+        if (Number.isInteger(folderId) && folderId > 0) {
+          this.filterMode.set(`folder:${folderId}`);
+        } else if (params.get('location') === 'root') {
+          this.filterMode.set('root');
+        } else {
+          this.filterMode.set('all');
+        }
       }
 
       const documentId = Number(params.get('documentId'));
@@ -157,14 +184,37 @@ export class DocumentsComponent implements OnInit {
       onDone?.();
     })).subscribe({
       next: folders => {
-        this.folders.set(Array.isArray(folders) ? folders : []);
-        if (!folders?.length && this.uploadLocation() === 'folder') {
+        const items = Array.isArray(folders) ? folders : [];
+        this.folders.set(items);
+
+        const lockedFolderId = this.routeFolderId();
+        if (lockedFolderId !== null) {
+          this.filterMode.set(`folder:${lockedFolderId}`);
+
+          if (items.some(folder => folder.id === lockedFolderId)) {
+            this.uploadLocation.set('folder');
+            this.selectedFolderId.set(lockedFolderId);
+          } else {
+            this.selectedFolderId.set(null);
+            this.foldersError.set('This folder is unavailable or you no longer have access to it.');
+          }
+
+          return;
+        }
+
+        if (!items.length && this.uploadLocation() === 'folder') {
           this.setUploadLocation('root');
         }
       },
       error: error => {
         this.folders.set([]);
         this.foldersError.set(this.message(error, 'Folders could not be loaded. Root Vault upload is still available.'));
+
+        if (this.routeFolderId() !== null) {
+          this.selectedFolderId.set(null);
+          return;
+        }
+
         this.setUploadLocation('root');
       }
     });
@@ -195,12 +245,14 @@ export class DocumentsComponent implements OnInit {
   }
 
   setUploadLocation(location: 'root' | 'folder'): void {
+    if (this.isFolderView()) return;
     if (location === 'folder' && !this.foldersAvailable()) return;
     this.uploadLocation.set(location);
     if (location === 'root') this.selectedFolderId.set(null);
   }
 
   setSelectedFolder(value: string): void {
+    if (this.isFolderView()) return;
     const id = Number(value);
     this.selectedFolderId.set(Number.isInteger(id) && id > 0 ? id : null);
   }
@@ -218,8 +270,16 @@ export class DocumentsComponent implements OnInit {
       return;
     }
 
-    const folderId = this.uploadLocation() === 'folder' ? this.selectedFolderId() : null;
-    if (this.uploadLocation() === 'folder' && folderId === null) {
+    if (this.isFolderView() && !this.currentFolder()) {
+      this.notifications.warning('This folder is unavailable. Return to Folders and choose an available folder.');
+      return;
+    }
+
+    const folderId = this.isFolderView()
+      ? this.routeFolderId()
+      : (this.uploadLocation() === 'folder' ? this.selectedFolderId() : null);
+
+    if ((this.isFolderView() || this.uploadLocation() === 'folder') && folderId === null) {
       this.notifications.warning('Please choose a folder, or select Root Vault.');
       return;
     }
@@ -275,6 +335,7 @@ export class DocumentsComponent implements OnInit {
   }
 
   setFilter(value: string): void {
+    if (this.isFolderView()) return;
     this.filterMode.set(value);
     if (value === 'root') {
       void this.router.navigate([], { relativeTo: this.route, queryParams: { location: 'root', folderId: null }, queryParamsHandling: 'merge' });
@@ -442,8 +503,15 @@ export class DocumentsComponent implements OnInit {
 
   private clearUploadSelection(): void {
     this.selectedFile.set(null);
-    this.uploadLocation.set('root');
-    this.selectedFolderId.set(null);
+
+    if (this.isFolderView()) {
+      this.uploadLocation.set('folder');
+      this.selectedFolderId.set(this.routeFolderId());
+    } else {
+      this.uploadLocation.set('root');
+      this.selectedFolderId.set(null);
+    }
+
     if (this.fileInput?.nativeElement) this.fileInput.nativeElement.value = '';
   }
 
