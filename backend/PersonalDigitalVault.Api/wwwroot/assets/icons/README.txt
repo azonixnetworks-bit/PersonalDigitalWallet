@@ -1,1 +1,0 @@
-Put project icons here.
