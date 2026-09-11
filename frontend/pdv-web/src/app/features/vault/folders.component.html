@@ -23,7 +23,7 @@
       <span class="vault-card-icon" aria-hidden="true">📁</span>
     </div>
 
-    <form class="folder-create-form" (ngSubmit)="createFolder()">
+    <form class="folder-create-form" (submit)="createFolder(); $event.preventDefault()">
       <label for="folderName">Folder name</label>
       <div class="folder-create-row">
         <input
@@ -101,7 +101,7 @@
                 <button type="button" [disabled]="busyFolderId() === folder.id" (click)="saveRename(folder)">Save</button>
                 <button class="btn--secondary" type="button" [disabled]="busyFolderId() === folder.id" (click)="cancelRename()">Cancel</button>
               } @else {
-                <a class="btn folder-open-btn" [routerLink]="['/vault/documents']" [queryParams]="{ folderId: folder.id }">Open documents</a>
+                <a class="btn folder-open-btn" [routerLink]="['/vault/folders', folder.id]">Open folder</a>
                 <button class="btn--secondary" type="button" [disabled]="busyFolderId() !== null" (click)="startRename(folder)">Rename</button>
                 <button class="danger-button" type="button" [disabled]="busyFolderId() !== null" (click)="deleteFolder(folder)">
                   {{ busyFolderId() === folder.id ? 'Working…' : 'Delete' }}

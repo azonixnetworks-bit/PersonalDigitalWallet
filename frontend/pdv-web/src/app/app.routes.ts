@@ -29,6 +29,7 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent) },
       { path: 'vault/folders', loadComponent: () => import('./features/vault/folders.component').then(m => m.FoldersComponent) },
+      { path: 'vault/folders/:folderId', loadComponent: () => import('./features/vault/documents.component').then(m => m.DocumentsComponent) },
       { path: 'vault/documents', loadComponent: () => import('./features/vault/documents.component').then(m => m.DocumentsComponent) },
       { path: 'vault/credentials', loadComponent: () => import('./features/vault/credentials.component').then(m => m.CredentialsComponent) },
       { path: 'search', loadComponent: () => import('./features/search/search.component').then(m => m.SearchComponent) },
