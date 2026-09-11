@@ -5,3 +5,4 @@ SecureStorage/
 *.user
 *.suo
 appsettings.Production.json
+artifacts/
