@@ -13,7 +13,7 @@
       <span class="privacy-badge">Secrets excluded</span>
     </div>
 
-    <form class="search-form" (ngSubmit)="search()">
+    <form class="search-form" (submit)="search(); $event.preventDefault()">
       <label class="search-field" for="vault-keyword">
         <span>Search</span>
         <div class="search-input-row">

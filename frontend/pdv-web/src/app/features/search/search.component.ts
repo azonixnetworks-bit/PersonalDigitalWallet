@@ -88,10 +88,10 @@ export class SearchComponent {
   }
 
   openResult(result: VaultSearchResult): void {
-    if (result.type === 'Folder') {
-      void this.router.navigate(['/vault/documents'], { queryParams: { folderId: result.id } });
-      return;
-    }
+ if (result.type === 'Folder') {
+  void this.router.navigate(['/vault/folders', result.id]);
+  return;
+}
 
     if (result.type === 'Document') {
       void this.router.navigate(['/vault/documents'], { queryParams: { documentId: result.id } });
