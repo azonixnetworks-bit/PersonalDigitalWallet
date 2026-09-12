@@ -29,6 +29,9 @@ public class AppDbContext(
     public DbSet<Subscription> Subscriptions =>
         Set<Subscription>();
 
+    public DbSet<GoogleDriveBackupConnection> GoogleDriveBackupConnections =>
+        Set<GoogleDriveBackupConnection>();
+
 
     // =========================================================
     // MODEL CONFIGURATION
@@ -351,5 +354,32 @@ public class AppDbContext(
             .Property(
                 x => x.Status)
             .HasMaxLength(40);
+
+
+        // =====================================================
+        // GOOGLE DRIVE BACKUP CONNECTION
+        // =====================================================
+        // One Google Drive backup connection per PDV user.
+        modelBuilder.Entity<GoogleDriveBackupConnection>()
+            .HasOne(x => x.User)
+            .WithMany()
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<GoogleDriveBackupConnection>()
+            .HasIndex(x => x.UserId)
+            .IsUnique();
+
+        modelBuilder.Entity<GoogleDriveBackupConnection>()
+            .Property(x => x.RefreshTokenEncrypted)
+            .HasMaxLength(4096);
+
+        modelBuilder.Entity<GoogleDriveBackupConnection>()
+            .Property(x => x.AccountEmailEncrypted)
+            .HasMaxLength(2048);
+
+        modelBuilder.Entity<GoogleDriveBackupConnection>()
+            .Property(x => x.AutoBackupFrequency)
+            .HasMaxLength(20);
     }
 }
