@@ -382,26 +382,42 @@
         <button class="btn btn--secondary" type="button" (click)="closeSharePanel()">Close</button>
       </div>
 
-      <form class="share-form" (ngSubmit)="sendShare()">
-        <label for="recipientEmail">Registered recipient email</label>
-        <div class="share-form-row">
-          <input
-            id="recipientEmail"
-            type="email"
-            autocomplete="off"
-            placeholder="recipient@example.com"
-            [formControl]="shareEmail">
-          <button type="submit" [disabled]="shareBusy() || shareEmail.invalid">
-            {{ shareBusy() ? 'Sending…' : 'Send secure invitation' }}
-          </button>
-        </div>
+      <form
+  class="share-form"
+  (submit)="sendShare(); $event.preventDefault()">
+  <label for="recipientEmail">
+    Registered PDV client email
+  </label>
 
-        @if (shareEmail.touched && shareEmail.invalid) {
-          <p class="field-error">Enter a valid registered email address.</p>
-        }
+  <div class="share-form-row">
+    <input
+      id="recipientEmail"
+      type="email"
+      autocomplete="off"
+      placeholder="registered-client@example.com"
+      maxlength="320"
+      [formControl]="shareEmail">
 
-        <p class="share-security-note">The email link alone cannot download the document. The intended recipient must authenticate and accept the secure invitation first.</p>
-      </form>
+    <button
+      type="submit"
+      [disabled]="shareBusy() || shareEmail.invalid">
+      {{ shareBusy() ? 'Sending…' : 'Share with client' }}
+    </button>
+  </div>
+
+  @if (shareEmail.touched && shareEmail.invalid) {
+    <p class="field-error">
+      Enter a valid registered PDV client email address.
+    </p>
+  }
+
+  <p class="share-security-note">
+    Only existing Personal Digital Vault clients can receive this file.
+    External email addresses are not allowed.
+    The recipient must sign in to their own account and accept the secure invitation before access is granted.
+  </p>
+</form>
+
 
       <div class="share-list-heading">
         <div><span class="vault-kicker">Access records</span><h3>Shared with</h3></div>

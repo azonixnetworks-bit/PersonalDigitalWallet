@@ -17,6 +17,10 @@ public class ShareDocumentRequestDto
     //
     [Required]
     [EmailAddress]
+    [StringLength(
+        320,
+        ErrorMessage =
+            "Recipient email cannot exceed 320 characters.")]
     public string RecipientEmail { get; set; }
         = string.Empty;
 }

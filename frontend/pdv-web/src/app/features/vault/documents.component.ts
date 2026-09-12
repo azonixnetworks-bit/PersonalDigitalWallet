@@ -67,9 +67,13 @@ export class DocumentsComponent implements OnInit {
   readonly loadingShares = signal(false);
   readonly shareBusy = signal(false);
   readonly shareEmail = new FormControl('', {
-    nonNullable: true,
-    validators: [Validators.required, Validators.email]
-  });
+  nonNullable: true,
+  validators: [
+    Validators.required,
+    Validators.email,
+    Validators.maxLength(320)
+  ]
+});
 
   readonly foldersAvailable = computed(() => this.folders().length > 0);
   readonly isFolderView = computed(() => this.routeFolderId() !== null);
@@ -443,22 +447,56 @@ export class DocumentsComponent implements OnInit {
     this.shareEmail.reset('');
   }
 
-  sendShare(): void {
-    const document = this.shareDocument();
-    this.shareEmail.markAsTouched();
-    const recipientEmail = this.shareEmail.value.trim();
-    if (!document || this.shareEmail.invalid || !recipientEmail || this.shareBusy()) return;
+ sendShare(): void {
+  const document = this.shareDocument();
 
-    this.shareBusy.set(true);
-    this.documentsApi.share(document.id, { recipientEmail }).pipe(finalize(() => this.shareBusy.set(false))).subscribe({
-      next: share => {
-        this.shares.update(items => [share, ...items.filter(item => item.shareId !== share.shareId)]);
-        this.shareEmail.reset('');
-        this.notifications.success(`Secure invitation sent to ${share.recipientEmail || recipientEmail}.`);
-      },
-      error: error => this.notifications.error(this.message(error, 'The document could not be shared with this recipient.'))
-    });
+  this.shareEmail.markAsTouched();
+
+  const recipientEmail =
+    this.shareEmail.value.trim();
+
+  if (
+    !document ||
+    this.shareEmail.invalid ||
+    !recipientEmail ||
+    this.shareBusy()
+  ) {
+    return;
   }
+
+  this.shareBusy.set(true);
+
+  this.documentsApi
+    .share(document.id, { recipientEmail })
+    .pipe(
+      finalize(() =>
+        this.shareBusy.set(false)
+      )
+    )
+    .subscribe({
+      next: share => {
+        this.shares.update(items => [
+          share,
+          ...items.filter(
+            item =>
+              item.shareId !== share.shareId
+          )
+        ]);
+
+        this.shareEmail.reset('');
+
+        this.notifications.success(
+          `Secure invitation sent to registered PDV client ${share.recipientEmail || recipientEmail}.`
+        );
+      },
+
+      error: () => {
+        this.notifications.error(
+          'This document could not be shared. Only an eligible registered PDV client can receive secure document access.'
+        );
+      }
+    });
+}
 
   loadShares(documentId: number): void {
     this.loadingShares.set(true);
