@@ -442,8 +442,16 @@ public class EmailService
 
         var baseUrl =
             _configuration[
-                "App:BaseUrl"
+                "App:FrontendBaseUrl"
             ];
+
+        if (string.IsNullOrWhiteSpace(baseUrl))
+        {
+            baseUrl =
+                _configuration[
+                    "App:BaseUrl"
+                ];
+        }
 
 
         if (
@@ -524,7 +532,7 @@ public class EmailService
         //
         var invitationUrl =
             $"{baseUrl.TrimEnd('/')}" +
-            "/html/share-invitation.html" +
+            "/share-invitation" +
             $"#token={safeToken}";
 
 
