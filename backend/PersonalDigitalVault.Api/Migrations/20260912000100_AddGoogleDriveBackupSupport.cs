@@ -20,7 +20,7 @@ public partial class AddGoogleDriveBackupSupport : Migration
                 Id = table.Column<int>(type: "int", nullable: false)
                     .Annotation("SqlServer:Identity", "1, 1"),
                 UserId = table.Column<int>(type: "int", nullable: false),
-                RefreshTokenEncrypted = table.Column<string>(type: "nvarchar(4096)", maxLength: 4096, nullable: false),
+                RefreshTokenEncrypted = table.Column<string>(type: "nvarchar(max)", nullable: false),
                 AccountEmailEncrypted = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
                 AutoBackupEnabled = table.Column<bool>(type: "bit", nullable: false),
                 AutoBackupFrequency = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
