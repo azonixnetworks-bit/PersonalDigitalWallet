@@ -5,23 +5,24 @@ namespace PersonalDigitalVault.Api.Security;
 
 public sealed class GoogleOAuthStateService
 {
-    private readonly byte[] _signingKey;
+    private readonly byte[]? _signingKey;
 
     public GoogleOAuthStateService(IConfiguration configuration)
     {
         string? key = configuration["GoogleDrive:StateSigningKey"];
 
-        if (string.IsNullOrWhiteSpace(key) || Encoding.UTF8.GetByteCount(key) < 32)
+        if (!string.IsNullOrWhiteSpace(key) && Encoding.UTF8.GetByteCount(key) >= 32)
         {
-            throw new InvalidOperationException(
-                "GoogleDrive:StateSigningKey must contain at least 32 bytes.");
+            _signingKey = Encoding.UTF8.GetBytes(key);
         }
-
-        _signingKey = Encoding.UTF8.GetBytes(key);
     }
+
+    public bool IsConfigured => _signingKey is not null;
 
     public string Create(int userId, TimeSpan lifetime)
     {
+        byte[] signingKey = GetSigningKey();
+
         if (userId <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(userId));
@@ -31,13 +32,15 @@ public sealed class GoogleOAuthStateService
         string nonce = Convert.ToHexString(RandomNumberGenerator.GetBytes(16));
         string payload = $"{userId}|{expires}|{nonce}";
         byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
-        byte[] signature = HMACSHA256.HashData(_signingKey, payloadBytes);
+        byte[] signature = HMACSHA256.HashData(signingKey, payloadBytes);
 
         return $"{Base64UrlEncode(payloadBytes)}.{Base64UrlEncode(signature)}";
     }
 
     public int ValidateAndGetUserId(string state)
     {
+        byte[] signingKey = GetSigningKey();
+
         if (string.IsNullOrWhiteSpace(state))
         {
             throw new InvalidOperationException("Invalid OAuth state.");
@@ -62,7 +65,7 @@ public sealed class GoogleOAuthStateService
             throw new InvalidOperationException("Invalid OAuth state.");
         }
 
-        byte[] expectedSignature = HMACSHA256.HashData(_signingKey, payloadBytes);
+        byte[] expectedSignature = HMACSHA256.HashData(signingKey, payloadBytes);
         if (suppliedSignature.Length != expectedSignature.Length ||
             !CryptographicOperations.FixedTimeEquals(suppliedSignature, expectedSignature))
         {
@@ -84,6 +87,12 @@ public sealed class GoogleOAuthStateService
         }
 
         return userId;
+    }
+
+    private byte[] GetSigningKey()
+    {
+        return _signingKey ?? throw new InvalidOperationException(
+            "Google Drive backup is not configured. GoogleDrive:StateSigningKey must contain at least 32 bytes.");
     }
 
     private static string Base64UrlEncode(byte[] bytes)
