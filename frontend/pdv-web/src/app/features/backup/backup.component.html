@@ -1,7 +1,7 @@
 <app-page-header
   eyebrow="Vault protection"
   title="Google Drive Backup"
-  description="Create encrypted off-site backups of your PDV vault without exposing plaintext documents or credentials." />
+  subtitle="Create encrypted off-site backups of your PDV vault without exposing plaintext documents or credentials." />
 
 @if (loading()) {
   <app-ui-loader label="Loading backup security settings…" />
@@ -81,7 +81,7 @@
         <li><span aria-hidden="true">✓</span><div><strong>No plaintext cloud copy</strong><small>Documents stay as encrypted .vault data and backup metadata is AES protected.</small></div></li>
         <li><span aria-hidden="true">✓</span><div><strong>Integrity verified</strong><small>Each backup package is SHA-256 checked before a restore is accepted.</small></div></li>
         <li><span aria-hidden="true">✓</span><div><strong>TOTP restore step-up</strong><small>A fresh authenticator code is required before PDV restores cloud data.</small></div></li>
-        <li><span aria-hidden="true">✓</span><div><strong>Admin cannot read backups</strong><small>Backups remain bound to the authenticated PDV owner and encrypted vault key.</small></div></li>
+        <li><span aria-hidden="true">✓</span><div><strong>No cross-user admin backup API</strong><small>Backup operations are always bound to the authenticated PDV account.</small></div></li>
       </ul>
     </article>
   </section>
