@@ -313,7 +313,10 @@ public sealed class GoogleDriveBackupService : IGoogleDriveBackupService
         string totpCode,
         CancellationToken cancellationToken)
     {
-        User? user = await _db.Users.SingleOrDefaultAsync(x => x.Id == userId, cancellationToken);
+        User? user = await _db.Users
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == userId, cancellationToken);
+
         if (user is null ||
             !user.IsActive ||
             !user.IsTotpEnabled ||
@@ -337,15 +340,19 @@ public sealed class GoogleDriveBackupService : IGoogleDriveBackupService
             throw new UnauthorizedAccessException("Invalid authenticator code.");
         }
 
-        if (user.LastTotpTimeStepUsed.HasValue &&
-            matchedTimeStep <= user.LastTotpTimeStepUsed.Value)
+        // Atomically consume the time-step so two concurrent restore requests
+        // cannot both reuse the same authenticator code.
+        int updated = await _db.Users
+            .Where(x => x.Id == userId &&
+                        (!x.LastTotpTimeStepUsed.HasValue || x.LastTotpTimeStepUsed < matchedTimeStep))
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(x => x.LastTotpTimeStepUsed, matchedTimeStep),
+                cancellationToken);
+
+        if (updated != 1)
         {
             throw new UnauthorizedAccessException("Authenticator code has already been used.");
         }
-
-        // Consume the TOTP before any destructive/restore work starts.
-        user.LastTotpTimeStepUsed = matchedTimeStep;
-        await _db.SaveChangesAsync(cancellationToken);
     }
 
     private async Task<GoogleDriveBackupConnection> GetConnectionAsync(
