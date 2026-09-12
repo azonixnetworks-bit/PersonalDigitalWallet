@@ -225,8 +225,7 @@ namespace PersonalDigitalVault.Api.Migrations
 
                     b.Property<string>("RefreshTokenEncrypted")
                         .IsRequired()
-                        .HasMaxLength(4096)
-                        .HasColumnType("nvarchar(4096)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");

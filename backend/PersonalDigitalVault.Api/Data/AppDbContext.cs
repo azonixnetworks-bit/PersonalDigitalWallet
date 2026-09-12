@@ -370,9 +370,11 @@ public class AppDbContext(
             .HasIndex(x => x.UserId)
             .IsUnique();
 
+        // Encrypted Google OAuth refresh tokens can exceed SQL Server's
+        // nvarchar(n) limit of 4000 characters after encryption/base64 encoding.
         modelBuilder.Entity<GoogleDriveBackupConnection>()
             .Property(x => x.RefreshTokenEncrypted)
-            .HasMaxLength(4096);
+            .HasColumnType("nvarchar(max)");
 
         modelBuilder.Entity<GoogleDriveBackupConnection>()
             .Property(x => x.AccountEmailEncrypted)
