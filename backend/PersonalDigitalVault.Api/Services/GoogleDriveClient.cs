@@ -10,6 +10,7 @@ public sealed class GoogleDriveClient
     private const string DriveScope = "https://www.googleapis.com/auth/drive.appdata";
     private const string AuthorizationEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
     private const string TokenEndpoint = "https://oauth2.googleapis.com/token";
+    private const string RevokeEndpoint = "https://oauth2.googleapis.com/revoke";
     private const string UserInfoEndpoint = "https://openidconnect.googleapis.com/v1/userinfo";
     private const string DriveApiBase = "https://www.googleapis.com/drive/v3";
     private const string DriveUploadBase = "https://www.googleapis.com/upload/drive/v3";
@@ -199,7 +200,8 @@ public sealed class GoogleDriveClient
             throw new InvalidOperationException("Google Drive backup upload failed.");
         }
 
-        return ParseDriveFile(JsonDocument.Parse(resultJson).RootElement, integrityHash);
+        using JsonDocument resultDocument = JsonDocument.Parse(resultJson);
+        return ParseDriveFile(resultDocument.RootElement, integrityHash);
     }
 
     public async Task<IReadOnlyList<BackupHistoryItemDto>> ListBackupsAsync(
@@ -318,17 +320,20 @@ public sealed class GoogleDriveClient
         }
 
         using HttpClient client = _httpClientFactory.CreateClient();
-        string url = "https://oauth2.googleapis.com/revoke?token=" + Uri.EscapeDataString(refreshToken);
-        using var content = new StringContent(string.Empty);
+        using var content = new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["token"] = refreshToken
+        });
 
-        // Revocation is best-effort. Local encrypted token deletion is authoritative.
+        // Revocation is best-effort. Keep the refresh token in the POST body so
+        // it cannot leak through request URLs, proxies or URL-oriented logs.
         try
         {
-            await client.PostAsync(url, content, cancellationToken);
+            await client.PostAsync(RevokeEndpoint, content, cancellationToken);
         }
         catch (HttpRequestException)
         {
-            // Intentionally ignored.
+            // Intentionally ignored. Local encrypted token deletion is authoritative.
         }
     }
 
