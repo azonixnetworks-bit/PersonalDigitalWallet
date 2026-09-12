@@ -551,6 +551,31 @@ builder.Services.AddSingleton<
 
 
 // =========================================================
+// GOOGLE DRIVE ENCRYPTED BACKUP
+// =========================================================
+//
+// Google OAuth state signing + least-privilege Drive appData
+// client + encrypted package orchestration + scheduled backups.
+// Existing vault encryption and ownership boundaries stay intact.
+//
+builder.Services.AddSingleton<
+    GoogleOAuthStateService>();
+
+builder.Services.AddScoped<
+    GoogleDriveClient>();
+
+builder.Services.AddScoped<
+    VaultBackupPackageService>();
+
+builder.Services.AddScoped<
+    IGoogleDriveBackupService,
+    GoogleDriveBackupService>();
+
+builder.Services.AddHostedService<
+    GoogleDriveAutoBackupWorker>();
+
+
+// =========================================================
 // DATABASE SEEDER
 // =========================================================
 //
@@ -997,7 +1022,6 @@ builder.Services
                                     return;
                                 }
                             }
-
 
                             // =================================
                             // ADMIN LOGIN DESIGN

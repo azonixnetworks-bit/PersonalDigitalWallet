@@ -194,6 +194,54 @@ namespace PersonalDigitalVault.Api.Migrations
                     b.ToTable("Folders");
                 });
 
+            modelBuilder.Entity("PersonalDigitalVault.Api.Entities.GoogleDriveBackupConnection", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AccountEmailEncrypted")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
+
+                    b.Property<bool>("AutoBackupEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("AutoBackupFrequency")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastBackupAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("NextBackupAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RefreshTokenEncrypted")
+                        .IsRequired()
+                        .HasMaxLength(4096)
+                        .HasColumnType("nvarchar(4096)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("GoogleDriveBackupConnections");
+                });
+
             modelBuilder.Entity("PersonalDigitalVault.Api.Entities.Subscription", b =>
                 {
                     b.Property<int>("Id")
@@ -418,6 +466,17 @@ namespace PersonalDigitalVault.Api.Migrations
                 {
                     b.HasOne("PersonalDigitalVault.Api.Entities.User", "User")
                         .WithMany("Folders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PersonalDigitalVault.Api.Entities.GoogleDriveBackupConnection", b =>
+                {
+                    b.HasOne("PersonalDigitalVault.Api.Entities.User", "User")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
