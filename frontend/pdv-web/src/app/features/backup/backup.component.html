@@ -1,0 +1,209 @@
+<app-page-header
+  eyebrow="Vault protection"
+  title="Google Drive Backup"
+  description="Create encrypted off-site backups of your PDV vault without exposing plaintext documents or credentials." />
+
+@if (loading()) {
+  <app-ui-loader label="Loading backup security settings…" />
+} @else if (error()) {
+  <section class="backup-card backup-card--error" role="alert">
+    <div>
+      <span class="backup-card__eyebrow">Backup unavailable</span>
+      <h2>We could not load backup settings</h2>
+      <p>{{ error() }}</p>
+    </div>
+    <button class="button button--secondary" type="button" (click)="load()">Try again</button>
+  </section>
+} @else if (!configured()) {
+  <section class="backup-card backup-card--warning">
+    <div class="backup-card__icon" aria-hidden="true">!</div>
+    <div>
+      <span class="backup-card__eyebrow">Server setup required</span>
+      <h2>Google Drive backup is not configured</h2>
+      <p>PDV must be configured with a Google OAuth client, an exact callback URL and a dedicated state-signing key before users can connect Drive.</p>
+    </div>
+  </section>
+} @else {
+  <section class="backup-overview" aria-label="Backup status">
+    <article class="backup-card backup-card--connection">
+      <div class="backup-card__heading">
+        <div>
+          <span class="backup-card__eyebrow">Connection</span>
+          <h2>{{ connected() ? 'Google Drive connected' : 'Connect Google Drive' }}</h2>
+        </div>
+        <span class="status-pill" [class.status-pill--active]="connected()">
+          {{ connected() ? 'Protected' : 'Not connected' }}
+        </span>
+      </div>
+
+      @if (connected()) {
+        <p class="connection-copy">
+          PDV stores backup files only in its private Google Drive app-data space. Your OAuth refresh token is encrypted at rest.
+        </p>
+        <dl class="status-grid">
+          <div>
+            <dt>Google account</dt>
+            <dd>{{ status()?.accountEmail || 'Connected account' }}</dd>
+          </div>
+          <div>
+            <dt>Last backup</dt>
+            <dd>{{ date(status()?.lastBackupAt) }}</dd>
+          </div>
+          <div>
+            <dt>Next automatic backup</dt>
+            <dd>{{ status()?.autoBackupEnabled ? date(status()?.nextBackupAt) : 'Automatic backup off' }}</dd>
+          </div>
+        </dl>
+
+        <div class="button-row">
+          <button class="button button--primary" type="button" [disabled]="backingUp()" (click)="backupNow()">
+            {{ backingUp() ? 'Creating encrypted backup…' : 'Backup Now' }}
+          </button>
+          <button class="button button--danger-ghost" type="button" [disabled]="disconnecting()" (click)="disconnectGoogleDrive()">
+            {{ disconnecting() ? 'Disconnecting…' : 'Disconnect Google Drive' }}
+          </button>
+        </div>
+      } @else {
+        <p class="connection-copy">
+          PDV requests the narrow Google Drive app-data permission instead of access to your normal Drive files. Backups remain encrypted before they leave PDV.
+        </p>
+        <button class="button button--google" type="button" [disabled]="connecting()" (click)="connectGoogleDrive()">
+          <span aria-hidden="true">G</span>
+          {{ connecting() ? 'Preparing secure connection…' : 'Connect Google Drive' }}
+        </button>
+      }
+    </article>
+
+    <article class="backup-card">
+      <span class="backup-card__eyebrow">Security model</span>
+      <h2>Encrypted before cloud storage</h2>
+      <ul class="security-list">
+        <li><span aria-hidden="true">✓</span><div><strong>No plaintext cloud copy</strong><small>Documents stay as encrypted .vault data and backup metadata is AES protected.</small></div></li>
+        <li><span aria-hidden="true">✓</span><div><strong>Integrity verified</strong><small>Each backup package is SHA-256 checked before a restore is accepted.</small></div></li>
+        <li><span aria-hidden="true">✓</span><div><strong>TOTP restore step-up</strong><small>A fresh authenticator code is required before PDV restores cloud data.</small></div></li>
+        <li><span aria-hidden="true">✓</span><div><strong>Admin cannot read backups</strong><small>Backups remain bound to the authenticated PDV owner and encrypted vault key.</small></div></li>
+      </ul>
+    </article>
+  </section>
+
+  @if (connected()) {
+    <section class="backup-card schedule-card">
+      <div class="backup-card__heading">
+        <div>
+          <span class="backup-card__eyebrow">Automatic protection</span>
+          <h2>Backup schedule</h2>
+          <p>Automatic backups run server-side, so the browser does not need to stay open.</p>
+        </div>
+      </div>
+
+      <div class="schedule-controls">
+        <label class="toggle-control">
+          <input
+            type="checkbox"
+            [checked]="automaticEnabled()"
+            (change)="setAutomaticEnabled($any($event.target).checked)" />
+          <span class="toggle-control__track" aria-hidden="true"></span>
+          <span>
+            <strong>Automatic backup</strong>
+            <small>{{ automaticEnabled() ? 'Enabled' : 'Disabled' }}</small>
+          </span>
+        </label>
+
+        <label class="field">
+          <span>Frequency</span>
+          <select [value]="frequency()" [disabled]="!automaticEnabled()" (change)="setFrequency($any($event.target).value)">
+            <option value="Daily">Daily</option>
+            <option value="Weekly">Weekly</option>
+            <option value="Monthly">Monthly</option>
+          </select>
+        </label>
+
+        <button class="button button--secondary" type="button" [disabled]="savingAutomatic()" (click)="saveAutomaticSettings()">
+          {{ savingAutomatic() ? 'Saving…' : 'Save schedule' }}
+        </button>
+      </div>
+    </section>
+
+    <section class="backup-card history-card">
+      <div class="backup-card__heading">
+        <div>
+          <span class="backup-card__eyebrow">Recovery points</span>
+          <h2>Backup history</h2>
+          <p>Only backups created by PDV in its private Google Drive app-data area are listed here.</p>
+        </div>
+        <button class="button button--text" type="button" (click)="load()">Refresh</button>
+      </div>
+
+      @if (history().length === 0) {
+        <app-ui-empty-state
+          title="No backups yet"
+          description="Create your first encrypted recovery point with Backup Now." />
+      } @else {
+        <div class="backup-table-wrap">
+          <table class="backup-table">
+            <thead>
+              <tr>
+                <th scope="col">Backup</th>
+                <th scope="col">Created</th>
+                <th scope="col">Size</th>
+                <th scope="col">Integrity</th>
+                <th scope="col" class="backup-table__action">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of history(); track item.fileId) {
+                <tr>
+                  <td>
+                    <strong>{{ item.fileName }}</strong>
+                    <small>{{ item.status }}</small>
+                  </td>
+                  <td>{{ date(item.createdAt) }}</td>
+                  <td>{{ fileSize(item.size) }}</td>
+                  <td><code>{{ shortHash(item.integrityHash) }}</code></td>
+                  <td class="backup-table__action">
+                    <button class="button button--small" type="button" [disabled]="restoring()" (click)="beginRestore(item)">Restore</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  }
+}
+
+@if (restoreTarget()) {
+  <div class="restore-backdrop" role="presentation" (click)="cancelRestore()">
+    <section class="restore-dialog" role="dialog" aria-modal="true" aria-labelledby="restoreTitle" (click)="$event.stopPropagation()">
+      <span class="backup-card__eyebrow">Step-up authentication</span>
+      <h2 id="restoreTitle">Restore this encrypted backup?</h2>
+      <p class="restore-dialog__file">{{ restoreTarget()?.fileName }}</p>
+      <p>PDV verifies the backup SHA-256 hash first. Existing folders, documents and credentials are preserved; duplicate items are skipped.</p>
+
+      <label class="field field--totp">
+        <span>6-digit authenticator code</span>
+        <input
+          type="text"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          maxlength="6"
+          [value]="restoreTotpCode()"
+          (input)="setRestoreTotpCode($any($event.target).value)"
+          placeholder="000000" />
+      </label>
+
+      <div class="restore-dialog__warning">
+        <strong>Security check</strong>
+        <span>The authenticator code is used only for this restore request and is never stored in browser storage.</span>
+      </div>
+
+      <div class="button-row button-row--end">
+        <button class="button button--secondary" type="button" [disabled]="restoring()" (click)="cancelRestore()">Cancel</button>
+        <button class="button button--primary" type="button" [disabled]="!canRestore()" (click)="restoreSelected()">
+          {{ restoring() ? 'Verifying & restoring…' : 'Verify & Restore' }}
+        </button>
+      </div>
+    </section>
+  </div>
+}
