@@ -55,3 +55,18 @@ html[data-theme='dark'] .search-page .page-header h1 {
 html[data-theme='dark'] .search-page .page-header .page-subtitle {
   color:#9fb4ce !important;
 }
+
+/* Profile page title contrast fix — app-page-header renders in its own component scope. */
+.profile-page .page-header h1 {
+  color:#172033 !important;
+  text-shadow:none !important;
+}
+.profile-page .page-header .page-subtitle {
+  color:#64748b !important;
+}
+html[data-theme='dark'] .profile-page .page-header h1 {
+  color:#f8fbff !important;
+}
+html[data-theme='dark'] .profile-page .page-header .page-subtitle {
+  color:#9fb4ce !important;
+}
