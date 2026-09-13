@@ -3,6 +3,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { finalize, take } from 'rxjs';
 import { AuthService } from '../../../core/auth/auth.service';
 import { AppBrandComponent } from '../app-brand/app-brand.component';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-topbar',
@@ -15,11 +16,13 @@ import { AppBrandComponent } from '../app-brand/app-brand.component';
 export class AppTopbarComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  readonly themeService = inject(ThemeService);
   readonly menuOpen = signal(false);
   readonly loggingOut = signal(false);
 
   toggleMenu(): void { this.menuOpen.update(value => !value); }
   closeMenu(): void { this.menuOpen.set(false); }
+  toggleTheme(): void { this.themeService.toggle(); }
 
   logout(): void {
     if (this.loggingOut()) return;
