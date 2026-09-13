@@ -1,14 +1,9 @@
-<aside class="vault-sidebar" [class.is-open]="menuOpen()">
+<aside class="vault-sidebar" [class.is-collapsed]="sidebarCollapsed()">
   <div class="vault-sidebar__brand-row">
     <app-brand />
-    <div class="sidebar-actions">
-      <button class="theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-label]="themeService.theme() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'">
-        <span aria-hidden="true">{{ themeService.theme() === 'dark' ? '☀' : '☾' }}</span>
-      </button>
-      <button class="nav-toggle" type="button" [attr.aria-expanded]="menuOpen()" aria-controls="userPrimaryNavigation" aria-label="Toggle navigation" (click)="toggleMenu()">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
+    <button class="nav-toggle" type="button" [attr.aria-expanded]="menuOpen() || !sidebarCollapsed()" aria-controls="userPrimaryNavigation" aria-label="Toggle navigation" (click)="toggleNavigation()">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 
   <nav id="userPrimaryNavigation" class="vault-nav" [class.nav-open]="menuOpen()" aria-label="Primary navigation">
@@ -27,13 +22,30 @@
     <button class="logout-button" type="button" [disabled]="loggingOut()" (click)="logout()"><span class="nav-icon" aria-hidden="true">↪</span><span>{{ loggingOut() ? 'Signing out…' : 'Logout' }}</span></button>
   </nav>
 
-  <div class="vault-sidebar__trust">
-    <div class="trust-orb" aria-hidden="true"><span>✓</span></div>
-    <div class="trust-copy"><strong>Zero-access vault</strong><span>Private by design</span></div>
-  </div>
+  <div class="vault-sidebar__footer">
+    <button class="theme-switch" type="button" (click)="toggleTheme()" [attr.aria-label]="themeService.theme() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'">
+      <span class="theme-switch__icon" aria-hidden="true">{{ themeService.theme() === 'dark' ? '☀' : '☾' }}</span>
+      <span class="theme-switch__copy">
+        <strong>{{ themeService.theme() === 'dark' ? 'Light mode' : 'Dark mode' }}</strong>
+        <small>Change appearance</small>
+      </span>
+      <span class="theme-switch__chevron" aria-hidden="true">›</span>
+    </button>
 
-  <p class="vault-sidebar__motto">Your life.<br><strong>Safely stored.</strong><span>Private. Secure. Yours.</span></p>
+    <div class="vault-sidebar__trust">
+      <div class="trust-orb" aria-hidden="true"><span>✓</span></div>
+      <div class="trust-copy"><strong>Zero-access vault</strong><span>Private by design</span></div>
+    </div>
+
+    <p class="vault-sidebar__motto">Your life.<br><strong>Safely stored.</strong><span>Private. Secure. Yours.</span></p>
+  </div>
 </aside>
+
+@if (sidebarCollapsed()) {
+  <button class="desktop-reopen" type="button" aria-label="Open navigation" (click)="openSidebar()">
+    <span></span><span></span><span></span>
+  </button>
+}
 
 @if (menuOpen()) {
   <button class="mobile-backdrop" type="button" aria-label="Close navigation" (click)="closeMenu()"></button>
