@@ -1,0 +1,73 @@
+/* Dashboard Security Status contrast refinements — presentation only. */
+.security-card-v2 .security-check{
+  border:1px solid rgba(133,188,255,.16)!important;
+  background:rgba(255,255,255,.055)!important;
+}
+.security-card-v2 .security-check strong{
+  color:#f8fbff!important;
+  font-weight:800!important;
+}
+.security-card-v2 .security-check small{
+  color:#a9c0de!important;
+}
+.security-card-v2 .security-check-icon{
+  color:#dbeafe!important;
+  background:rgba(255,255,255,.10)!important;
+  border:1px solid rgba(255,255,255,.08)!important;
+}
+.security-card-v2 .security-check.ok .security-check-icon{
+  color:#052e21!important;
+  background:linear-gradient(145deg,#57e6b4,#18bb80)!important;
+  border-color:rgba(118,255,204,.45)!important;
+  box-shadow:0 6px 18px rgba(34,197,139,.18)!important;
+}
+.security-card-v2 .security-check.warning .security-check-icon{
+  color:#6b4a00!important;
+  background:#ffe8a3!important;
+  border-color:#f8d46f!important;
+}
+
+html[data-theme='dark'] .security-card-v2{
+  border-color:#255789!important;
+  background:radial-gradient(circle at 100% 0%,rgba(40,137,255,.20),transparent 34%),linear-gradient(155deg,#103a69,#0a2b50 58%,#071f3b)!important;
+}
+html[data-theme='dark'] .security-card-v2 .security-check{
+  border-color:#2b5b8d!important;
+  background:#0d325b!important;
+}
+html[data-theme='dark'] .security-card-v2 .security-check:hover{
+  border-color:#3d77b0!important;
+  background:#123c68!important;
+}
+html[data-theme='dark'] .security-card-v2 .security-check strong{
+  color:#ffffff!important;
+}
+html[data-theme='dark'] .security-card-v2 .security-check small{
+  color:#b7cae2!important;
+}
+html[data-theme='dark'] .security-card-v2 .security-check-icon{
+  color:#dceaff!important;
+  background:#153f6b!important;
+  border-color:#2b5b8d!important;
+}
+html[data-theme='dark'] .security-card-v2 .security-check.ok .security-check-icon{
+  color:#04281c!important;
+  background:linear-gradient(145deg,#62ecbc,#20c487)!important;
+  border-color:#74f1c3!important;
+}
+
+html:not([data-theme='dark']) .security-card-v2 .security-check{
+  border-color:rgba(142,194,255,.18)!important;
+  background:rgba(255,255,255,.08)!important;
+}
+html:not([data-theme='dark']) .security-card-v2 .security-check strong{
+  color:#ffffff!important;
+}
+html:not([data-theme='dark']) .security-card-v2 .security-check small{
+  color:#b8cae2!important;
+}
+
+@media(max-width:640px){
+  .security-card-v2 .security-check{padding:11px!important;grid-template-columns:34px minmax(0,1fr)!important;gap:10px!important}
+  .security-card-v2 .security-check-icon{width:32px!important;height:32px!important}
+}
