@@ -1,8 +1,12 @@
 <aside class="vault-sidebar" [class.is-collapsed]="sidebarCollapsed()">
   <div class="vault-sidebar__brand-row">
     <div class="brand-slot"><app-brand /></div>
-    <button class="nav-toggle" type="button" [attr.aria-expanded]="menuOpen() || !sidebarCollapsed()" aria-controls="userPrimaryNavigation" aria-label="Toggle navigation" (click)="toggleNavigation()">
-      <span></span><span></span><span></span>
+    <button class="nav-toggle" type="button" [attr.aria-expanded]="menuOpen() || !sidebarCollapsed()" aria-controls="userPrimaryNavigation" [attr.aria-label]="sidebarCollapsed() ? 'Expand navigation' : 'Collapse navigation'" (click)="toggleNavigation()">
+      <svg class="nav-toggle__icon" [class.is-collapsed]="sidebarCollapsed()" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="2.75" y="3" width="18.5" height="18" rx="4" stroke="currentColor" stroke-width="1.6" />
+        <path d="M8.5 3.8v16.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        <path d="m16 9-3 3 3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
     </button>
   </div>
 
