@@ -43,30 +43,30 @@ export class BackupService {
   constructor(private readonly api: ApiClientService) {}
 
   status(): Observable<BackupStatus> {
-    return this.api.get<BackupStatus>('api/backup/status');
+    return this.api.get<BackupStatus>('backup/status');
   }
 
   connectUrl(): Observable<ConnectUrlResponse> {
-    return this.api.get<ConnectUrlResponse>('api/backup/google/connect-url');
+    return this.api.get<ConnectUrlResponse>('backup/google/connect-url');
   }
 
   backupNow(): Observable<BackupHistoryItem> {
-    return this.api.post<BackupHistoryItem>('api/backup/now');
+    return this.api.post<BackupHistoryItem>('backup/now');
   }
 
   history(): Observable<BackupHistoryItem[]> {
-    return this.api.get<BackupHistoryItem[]>('api/backup/history');
+    return this.api.get<BackupHistoryItem[]>('backup/history');
   }
 
   setAutomatic(enabled: boolean, frequency: 'Daily' | 'Weekly' | 'Monthly'): Observable<ActionResponse> {
-    return this.api.put<ActionResponse>('api/backup/automatic', { enabled, frequency });
+    return this.api.put<ActionResponse>('backup/automatic', { enabled, frequency });
   }
 
   restore(fileId: string, totpCode: string): Observable<RestoreBackupResult> {
-    return this.api.post<RestoreBackupResult>('api/backup/restore', { fileId, totpCode });
+    return this.api.post<RestoreBackupResult>('backup/restore', { fileId, totpCode });
   }
 
   disconnect(): Observable<ActionResponse> {
-    return this.api.delete<ActionResponse>('api/backup/google');
+    return this.api.delete<ActionResponse>('backup/google');
   }
 }
