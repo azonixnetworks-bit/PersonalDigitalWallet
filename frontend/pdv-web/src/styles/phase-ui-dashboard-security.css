@@ -1,25 +1,15 @@
 /* Dashboard Security Status contrast refinements — presentation only. */
 .security-card-v2 .security-check{
   border:1px solid rgba(133,188,255,.16)!important;
-  background:rgba(255,255,255,.055)!important;
-}
-.security-card-v2 .security-check strong{
-  color:#f8fbff!important;
-  font-weight:800!important;
-}
-.security-card-v2 .security-check small{
-  color:#a9c0de!important;
 }
 .security-card-v2 .security-check-icon{
-  color:#dbeafe!important;
-  background:rgba(255,255,255,.10)!important;
-  border:1px solid rgba(255,255,255,.08)!important;
+  border:1px solid transparent!important;
 }
 .security-card-v2 .security-check.ok .security-check-icon{
-  color:#052e21!important;
-  background:linear-gradient(145deg,#57e6b4,#18bb80)!important;
-  border-color:rgba(118,255,204,.45)!important;
-  box-shadow:0 6px 18px rgba(34,197,139,.18)!important;
+  color:#063b2a!important;
+  background:linear-gradient(145deg,#58e7b5,#22c98c)!important;
+  border-color:rgba(35,199,139,.28)!important;
+  box-shadow:0 6px 18px rgba(34,197,139,.16)!important;
 }
 .security-card-v2 .security-check.warning .security-check-icon{
   color:#6b4a00!important;
@@ -27,9 +17,69 @@
   border-color:#f8d46f!important;
 }
 
+/* Light theme: security panel is intentionally light, so copy must be dark and high-contrast. */
+html:not([data-theme='dark']) .security-card-v2{
+  color:#13233c!important;
+  border-color:#d7e4f3!important;
+  background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%)!important;
+  box-shadow:0 10px 28px rgba(24,55,96,.06)!important;
+}
+html:not([data-theme='dark']) .security-card-v2 .section-title h2{
+  color:#16233a!important;
+}
+html:not([data-theme='dark']) .security-card-v2 .dashboard-section-kicker{
+  color:#8395aa!important;
+  opacity:1!important;
+}
+html:not([data-theme='dark']) .security-card-v2 .security-badge{
+  color:#52657e!important;
+  border-color:#d5e2f0!important;
+  background:#f4f8fc!important;
+}
+html:not([data-theme='dark']) .security-card-v2 .security-badge.secure{
+  color:#087653!important;
+  border-color:#bfe9d8!important;
+  background:#ecfaf4!important;
+}
+html:not([data-theme='dark']) .security-card-v2 .security-check{
+  border-color:#dce7f4!important;
+  background:#ffffff!important;
+  box-shadow:0 5px 16px rgba(24,55,96,.035)!important;
+}
+html:not([data-theme='dark']) .security-card-v2 .security-check:hover{
+  border-color:#bfd6f3!important;
+  background:#f8fbff!important;
+}
+html:not([data-theme='dark']) .security-card-v2 .security-check strong{
+  color:#17233a!important;
+  font-weight:800!important;
+}
+html:not([data-theme='dark']) .security-card-v2 .security-check small{
+  color:#60748f!important;
+}
+html:not([data-theme='dark']) .security-card-v2 .security-check-icon{
+  color:#286fd8!important;
+  background:#edf5ff!important;
+  border-color:#d5e5fa!important;
+}
+html:not([data-theme='dark']) .security-card-v2 .security-check.ok .security-check-icon{
+  color:#063b2a!important;
+  background:linear-gradient(145deg,#58e7b5,#22c98c)!important;
+  border-color:#9ee8cd!important;
+}
+
+/* Dark theme: preserve premium navy panel with bright readable copy. */
 html[data-theme='dark'] .security-card-v2{
+  color:#eaf4ff!important;
   border-color:#255789!important;
   background:radial-gradient(circle at 100% 0%,rgba(40,137,255,.20),transparent 34%),linear-gradient(155deg,#103a69,#0a2b50 58%,#071f3b)!important;
+}
+html[data-theme='dark'] .security-card-v2 .section-title h2{
+  color:#ffffff!important;
+}
+html[data-theme='dark'] .security-card-v2 .dashboard-section-kicker{
+  color:#8fb0d6!important;
+  opacity:1!important;
 }
 html[data-theme='dark'] .security-card-v2 .security-check{
   border-color:#2b5b8d!important;
@@ -41,6 +91,7 @@ html[data-theme='dark'] .security-card-v2 .security-check:hover{
 }
 html[data-theme='dark'] .security-card-v2 .security-check strong{
   color:#ffffff!important;
+  font-weight:800!important;
 }
 html[data-theme='dark'] .security-card-v2 .security-check small{
   color:#b7cae2!important;
@@ -54,17 +105,6 @@ html[data-theme='dark'] .security-card-v2 .security-check.ok .security-check-ico
   color:#04281c!important;
   background:linear-gradient(145deg,#62ecbc,#20c487)!important;
   border-color:#74f1c3!important;
-}
-
-html:not([data-theme='dark']) .security-card-v2 .security-check{
-  border-color:rgba(142,194,255,.18)!important;
-  background:rgba(255,255,255,.08)!important;
-}
-html:not([data-theme='dark']) .security-card-v2 .security-check strong{
-  color:#ffffff!important;
-}
-html:not([data-theme='dark']) .security-card-v2 .security-check small{
-  color:#b8cae2!important;
 }
 
 @media(max-width:640px){
