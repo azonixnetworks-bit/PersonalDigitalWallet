@@ -16,6 +16,7 @@
 @import './styles/phase-ui-sidebar-collapsed.css';
 @import './styles/phase-ui-dashboard-recent.css';
 @import './styles/phase-ui-dashboard-security.css';
+@import './styles/phase-ui-documents.css';
 
 html, body { min-height: 100%; }
 body { margin: 0; }
