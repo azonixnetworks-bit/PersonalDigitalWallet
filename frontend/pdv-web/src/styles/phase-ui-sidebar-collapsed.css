@@ -1,0 +1,141 @@
+/* Premium desktop collapsed sidebar rail.
+   Visual-only override: keeps navigation destinations available as icons. */
+@media (min-width: 1121px) {
+  app-topbar.sidebar-collapsed {
+    width: 76px !important;
+    min-height: 0 !important;
+  }
+
+  app-topbar.sidebar-collapsed .vault-sidebar {
+    width: 76px !important;
+    height: 100dvh !important;
+    min-height: 0 !important;
+    padding: 14px 10px 12px !important;
+    overflow: hidden !important;
+  }
+
+  app-topbar.sidebar-collapsed .vault-sidebar__brand-row {
+    flex: 0 0 auto !important;
+    justify-content: center !important;
+    padding: 2px 0 12px !important;
+  }
+
+  app-topbar.sidebar-collapsed .brand-slot,
+  app-topbar.sidebar-collapsed .vault-nav__label,
+  app-topbar.sidebar-collapsed .vault-nav a > span:not(.nav-icon),
+  app-topbar.sidebar-collapsed .logout-button > span:not(.nav-icon),
+  app-topbar.sidebar-collapsed .theme-switch__copy,
+  app-topbar.sidebar-collapsed .theme-switch__chevron,
+  app-topbar.sidebar-collapsed .vault-sidebar__trust,
+  app-topbar.sidebar-collapsed .vault-sidebar__motto {
+    display: none !important;
+  }
+
+  app-topbar.sidebar-collapsed .nav-toggle {
+    margin: 0 auto !important;
+  }
+
+  app-topbar.sidebar-collapsed .vault-nav {
+    display: grid !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    align-content: start !important;
+    gap: 7px !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    padding: 2px 2px 10px 0 !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(126,181,246,.42) transparent !important;
+  }
+
+  app-topbar.sidebar-collapsed .vault-nav::-webkit-scrollbar {
+    width: 3px !important;
+  }
+
+  app-topbar.sidebar-collapsed .vault-nav::-webkit-scrollbar-track {
+    background: transparent !important;
+  }
+
+  app-topbar.sidebar-collapsed .vault-nav::-webkit-scrollbar-thumb {
+    border-radius: 999px !important;
+    background: rgba(126,181,246,.42) !important;
+  }
+
+  app-topbar.sidebar-collapsed .vault-nav a,
+  app-topbar.sidebar-collapsed .logout-button {
+    width: 48px !important;
+    min-width: 48px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    flex: 0 0 48px !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    border-radius: 13px !important;
+  }
+
+  app-topbar.sidebar-collapsed .nav-icon {
+    width: 32px !important;
+    height: 32px !important;
+    flex: 0 0 32px !important;
+  }
+
+  app-topbar.sidebar-collapsed .vault-nav a:hover {
+    transform: none !important;
+  }
+
+  app-topbar.sidebar-collapsed .vault-sidebar__footer {
+    display: grid !important;
+    flex: 0 0 auto !important;
+    margin-top: 0 !important;
+    padding-top: 9px !important;
+    border-top: 1px solid rgba(148,193,255,.12) !important;
+    background: linear-gradient(180deg,rgba(6,23,47,0),rgba(6,23,47,.2)) !important;
+  }
+
+  app-topbar.sidebar-collapsed .theme-switch {
+    width: 48px !important;
+    min-width: 48px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    grid-template-columns: 1fr !important;
+    place-items: center !important;
+    gap: 0 !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    border-radius: 13px !important;
+  }
+
+  app-topbar.sidebar-collapsed .theme-switch__icon {
+    width: 32px !important;
+    height: 32px !important;
+  }
+}
+
+/* Extra-tight desktop heights: preserve every destination by making the icon rail scrollable. */
+@media (min-width:1121px) and (max-height:760px) {
+  app-topbar.sidebar-collapsed .vault-sidebar {
+    padding-top: 10px !important;
+    padding-bottom: 8px !important;
+  }
+
+  app-topbar.sidebar-collapsed .vault-sidebar__brand-row {
+    padding-bottom: 9px !important;
+  }
+
+  app-topbar.sidebar-collapsed .vault-nav {
+    gap: 5px !important;
+  }
+
+  app-topbar.sidebar-collapsed .vault-nav a,
+  app-topbar.sidebar-collapsed .logout-button,
+  app-topbar.sidebar-collapsed .theme-switch {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    flex-basis: 44px !important;
+  }
+}

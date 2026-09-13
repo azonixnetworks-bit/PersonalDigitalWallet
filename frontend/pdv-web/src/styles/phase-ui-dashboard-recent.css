@@ -1,0 +1,93 @@
+/* Dashboard recent documents readability override.
+   Presentation-only: no route, API, service, or data binding changes. */
+
+/* Light theme */
+.recent-card{
+  background:#ffffff !important;
+  border-color:#dbe7f5 !important;
+}
+.recent-document-list{
+  gap:8px !important;
+}
+.recent-document-row{
+  min-height:58px !important;
+  padding:10px 12px !important;
+  border:1px solid #e0e9f4 !important;
+  border-radius:12px !important;
+  background:#f8fbff !important;
+  box-shadow:0 2px 8px rgba(15,42,78,.035) !important;
+  transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease !important;
+}
+.recent-document-row:last-child{
+  border-bottom:1px solid #e0e9f4 !important;
+}
+.recent-document-row:hover{
+  transform:translateY(-1px) !important;
+  border-color:#bfd6f4 !important;
+  background:#ffffff !important;
+  box-shadow:0 8px 20px rgba(15,42,78,.07) !important;
+}
+.recent-file-icon{
+  border-color:#d8e5f5 !important;
+  background:#edf5ff !important;
+  color:#1f67cf !important;
+}
+.recent-file-copy strong{
+  color:#13233f !important;
+  font-weight:800 !important;
+}
+.recent-file-copy span,
+.recent-document-row time{
+  color:#70849f !important;
+}
+.recent-card .text-link{
+  color:#1769db !important;
+  font-weight:850 !important;
+}
+
+/* Dark theme */
+html[data-theme='dark'] .recent-card{
+  background:#0d1b2e !important;
+  border-color:#274563 !important;
+  box-shadow:0 12px 28px rgba(0,0,0,.20) !important;
+}
+html[data-theme='dark'] .recent-card .section-title h2{
+  color:#f3f8ff !important;
+}
+html[data-theme='dark'] .recent-card .dashboard-section-kicker{
+  color:#86a4c8 !important;
+}
+html[data-theme='dark'] .recent-card .text-link{
+  color:#69a9ff !important;
+}
+html[data-theme='dark'] .recent-document-row{
+  border-color:#223f60 !important;
+  background:#12243a !important;
+  box-shadow:none !important;
+}
+html[data-theme='dark'] .recent-document-row:hover{
+  border-color:#3d6fa7 !important;
+  background:#172d48 !important;
+  box-shadow:0 8px 18px rgba(0,0,0,.16) !important;
+}
+html[data-theme='dark'] .recent-file-icon{
+  border-color:#31577f !important;
+  background:#193553 !important;
+  color:#8ec0ff !important;
+}
+html[data-theme='dark'] .recent-file-copy strong{
+  color:#f2f7ff !important;
+  font-weight:800 !important;
+}
+html[data-theme='dark'] .recent-file-copy span{
+  color:#abc0d9 !important;
+}
+html[data-theme='dark'] .recent-document-row time{
+  color:#8fa8c7 !important;
+}
+
+@media(max-width:640px){
+  .recent-document-row{padding:10px !important;gap:9px !important}
+  .recent-file-copy strong{font-size:.72rem !important}
+  .recent-file-copy span,.recent-document-row time{font-size:.62rem !important}
+}

@@ -12,9 +12,86 @@
 @import './styles/phase2-design-system.css';
 @import './styles/phase3-auth.css';
 @import './styles/phase9-premium-light.css';
+@import './styles/premium-vault-theme.css';
+@import './styles/phase-ui-sidebar-collapsed.css';
+@import './styles/phase-ui-dashboard-recent.css';
+@import './styles/phase-ui-dashboard-security.css';
+@import './styles/phase-ui-documents.css';
+@import './styles/phase-ui-documents-actions.css';
+@import './styles/phase-ui-document-filetypes.css';
+@import './styles/phase-ui-auth-premium.css';
 
 html, body { min-height: 100%; }
 body { margin: 0; }
 .auth-link-row { text-align:right; margin-top:-6px; }
 .auth-link-row a { color:#2563eb; text-decoration:none; font-size:.88rem; font-weight:700; }
 button:disabled { opacity:.65; cursor:not-allowed; }
+
+/* Credentials page title contrast fix — scoped so frozen dashboard/other pages remain untouched. */
+.credentials-page .page-header h1 {
+  color:#172033 !important;
+  text-shadow:none !important;
+}
+.credentials-page .page-header .page-subtitle {
+  color:#64748b !important;
+}
+html[data-theme='dark'] .credentials-page .page-header h1 {
+  color:#f8fbff !important;
+}
+html[data-theme='dark'] .credentials-page .page-header .page-subtitle {
+  color:#9fb4ce !important;
+}
+
+/* Search page title contrast fix — global scope is required because app-page-header is a child component. */
+.search-page .page-header h1 {
+  color:#172033 !important;
+  text-shadow:none !important;
+}
+.search-page .page-header .page-subtitle {
+  color:#64748b !important;
+}
+html[data-theme='dark'] .search-page .page-header h1 {
+  color:#f8fbff !important;
+}
+html[data-theme='dark'] .search-page .page-header .page-subtitle {
+  color:#9fb4ce !important;
+}
+
+/* Profile page title contrast fix — app-page-header renders in its own component scope. */
+.profile-page .page-header h1 {
+  color:#172033 !important;
+  text-shadow:none !important;
+}
+.profile-page .page-header .page-subtitle {
+  color:#64748b !important;
+}
+html[data-theme='dark'] .profile-page .page-header h1 {
+  color:#f8fbff !important;
+}
+html[data-theme='dark'] .profile-page .page-header .page-subtitle {
+  color:#9fb4ce !important;
+}
+
+/* Profile dark-mode identity contrast — global scope avoids Angular style encapsulation on html[data-theme]. */
+html[data-theme='dark'] .profile-page .profile-overview .identity h2,
+html[data-theme='dark'] .profile-page .profile-form .section-heading h2 {
+  color:#f8fbff !important;
+}
+html[data-theme='dark'] .profile-page .profile-overview .identity p {
+  color:#9fb4ce !important;
+}
+
+/* Subscription page header contrast — app-page-header is rendered in a child component. */
+.billing-page .page-header h1 {
+  color:#172033 !important;
+  text-shadow:none !important;
+}
+.billing-page .page-header .page-subtitle {
+  color:#64748b !important;
+}
+html[data-theme='dark'] .billing-page .page-header h1 {
+  color:#f8fbff !important;
+}
+html[data-theme='dark'] .billing-page .page-header .page-subtitle {
+  color:#9fb4ce !important;
+}

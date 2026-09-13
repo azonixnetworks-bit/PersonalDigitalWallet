@@ -1,0 +1,11 @@
+/* File type marks for document list — presentation only. */
+.documents-page .document-icon{overflow:hidden!important;padding:0!important}
+.documents-page .file-type-logo{display:grid;place-items:center;width:100%;height:100%;border-radius:inherit;font-weight:900;letter-spacing:-.03em;line-height:1}
+.documents-page .file-type-logo--pdf{background:linear-gradient(145deg,#fff1f1,#ffe0e0);color:#d92d20;font-size:.58rem}
+.documents-page .file-type-logo--word{background:linear-gradient(145deg,#edf5ff,#dcecff);color:#185abd;font-size:1rem;font-family:Arial,sans-serif}
+.documents-page .file-type-logo--image{background:linear-gradient(145deg,#effcf6,#dff8ea);color:#16885c;font-size:1.05rem}
+.documents-page .file-type-logo--generic{background:linear-gradient(145deg,#f4f6f8,#e8edf3);color:#53657a;font-size:.48rem;letter-spacing:.04em}
+html[data-theme='dark'] .documents-page .file-type-logo--pdf{background:#351c24;color:#ff8b83}
+html[data-theme='dark'] .documents-page .file-type-logo--word{background:#112d57;color:#8ec1ff}
+html[data-theme='dark'] .documents-page .file-type-logo--image{background:#12392f;color:#78e0b6}
+html[data-theme='dark'] .documents-page .file-type-logo--generic{background:#1b2b3e;color:#b8c7d8}
