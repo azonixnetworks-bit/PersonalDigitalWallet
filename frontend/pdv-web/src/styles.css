@@ -15,6 +15,7 @@
 @import './styles/premium-vault-theme.css';
 @import './styles/phase-ui-sidebar-collapsed.css';
 @import './styles/phase-ui-dashboard-recent.css';
+@import './styles/phase-ui-dashboard-security.css';
 
 html, body { min-height: 100%; }
 body { margin: 0; }
