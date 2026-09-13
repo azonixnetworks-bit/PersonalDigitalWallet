@@ -50,8 +50,61 @@
 /* Folders */
 .folder-overview-card{margin-top:16px}.folder-overview-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-top:13px}.folder-overview-item{display:grid;grid-template-columns:40px minmax(0,1fr);align-items:center;gap:11px;padding:12px;border:1px solid var(--pdv-border);border-radius:12px;color:inherit;background:var(--pdv-surface-soft);text-decoration:none;transition:.18s ease}.folder-overview-item:hover{transform:translateY(-2px);border-color:#bdd6fb;background:var(--pdv-surface)}.folder-overview-icon{width:40px;height:40px;display:grid;place-items:center;border-radius:10px;background:#eaf3ff;font-size:1.05rem}.folder-overview-copy{min-width:0;display:grid;gap:2px}.folder-overview-copy strong{overflow:hidden;color:var(--pdv-text);font-size:.73rem;text-overflow:ellipsis;white-space:nowrap}.folder-overview-copy small{color:var(--pdv-muted);font-size:.63rem}.folder-empty{grid-column:1/-1}
 
-/* Dark theme */
-:host-context(html[data-theme='dark']) .dashboard-stat-icon,:host-context(html[data-theme='dark']) .folder-overview-icon{border-color:#24466c;background:#112845}:host-context(html[data-theme='dark']) .storage-track{background:#17283c}:host-context(html[data-theme='dark']) .vault-health-pill.secure{color:#69e0b3;border-color:#1e5b48;background:#102c25}:host-context(html[data-theme='dark']) .storage-warning{color:#ffd67a;background:#382d10}
+/* Dark theme — explicit contrast rules to prevent legacy light-theme selectors from winning. */
+:host-context(html[data-theme='dark']) .dashboard-shell::before{background:radial-gradient(circle at 76% 0%,rgba(46,128,255,.12),transparent 36%),linear-gradient(180deg,rgba(15,35,62,.72),transparent)}
+:host-context(html[data-theme='dark']) .dashboard-welcome h1,
+:host-context(html[data-theme='dark']) .dashboard-welcome p,
+:host-context(html[data-theme='dark']) .section-title h2,
+:host-context(html[data-theme='dark']) .plan-card__header h2,
+:host-context(html[data-theme='dark']) .plan-name,
+:host-context(html[data-theme='dark']) .storage-usage-copy>strong,
+:host-context(html[data-theme='dark']) .storage-details strong,
+:host-context(html[data-theme='dark']) .dashboard-stat-copy strong,
+:host-context(html[data-theme='dark']) .quick-action strong,
+:host-context(html[data-theme='dark']) .recent-file-copy strong,
+:host-context(html[data-theme='dark']) .dashboard-empty-state strong,
+:host-context(html[data-theme='dark']) .folder-overview-copy strong{color:#edf5ff!important}
+:host-context(html[data-theme='dark']) .dashboard-welcome p,
+:host-context(html[data-theme='dark']) .storage-usage-copy>span,
+:host-context(html[data-theme='dark']) .storage-details,
+:host-context(html[data-theme='dark']) .plan-card .muted,
+:host-context(html[data-theme='dark']) .quick-action small,
+:host-context(html[data-theme='dark']) .recent-file-copy span,
+:host-context(html[data-theme='dark']) .recent-document-row time,
+:host-context(html[data-theme='dark']) .folder-overview-copy small,
+:host-context(html[data-theme='dark']) .dashboard-loading-row,
+:host-context(html[data-theme='dark']) .dashboard-empty-state{color:#9fb4ce!important}
+:host-context(html[data-theme='dark']) .dashboard-section-kicker,
+:host-context(html[data-theme='dark']) .dashboard-stat-copy small{color:#7f9cbd!important}
+:host-context(html[data-theme='dark']) .card,
+:host-context(html[data-theme='dark']) .quick-actions-section,
+:host-context(html[data-theme='dark']) .dashboard-stat-card{background:#0d1b2e!important;border-color:#203b5d!important;box-shadow:0 12px 28px rgba(0,0,0,.18)!important}
+:host-context(html[data-theme='dark']) .plan-card{background:linear-gradient(145deg,#0d1b2e,#102642)!important}
+:host-context(html[data-theme='dark']) .dashboard-stat-card:hover,
+:host-context(html[data-theme='dark']) .quick-action:hover,
+:host-context(html[data-theme='dark']) .folder-overview-item:hover{border-color:#315b8a!important;background:#11243d!important}
+:host-context(html[data-theme='dark']) .dashboard-stat-icon,
+:host-context(html[data-theme='dark']) .folder-overview-icon,
+:host-context(html[data-theme='dark']) .recent-file-icon{border-color:#294a70!important;background:#112845!important;color:#dcecff!important}
+:host-context(html[data-theme='dark']) .quick-action{color:#edf5ff!important;background:#101f34!important;border-color:#203b5d!important}
+:host-context(html[data-theme='dark']) .quick-action>span{color:#8fc3ff!important;background:#163259!important}
+:host-context(html[data-theme='dark']) .quick-action.primary{color:#fff!important;background:linear-gradient(135deg,#176be9,#0d49ad)!important;border-color:#2d7df2!important}
+:host-context(html[data-theme='dark']) .mini-badge,
+:host-context(html[data-theme='dark']) .plan-badge{color:#c6d8ee!important;border-color:#294969!important;background:#11243a!important}
+:host-context(html[data-theme='dark']) .plan-badge.premium{color:#9ec8ff!important;border-color:#315b8a!important;background:#132b4c!important}
+:host-context(html[data-theme='dark']) .storage-track{background:#1a2c43!important}.storage-bar{box-shadow:none}
+:host-context(html[data-theme='dark']) .vault-health-pill{color:#c7d8ec!important;border-color:#274663!important;background:#0f2034!important}
+:host-context(html[data-theme='dark']) .vault-health-pill.secure{color:#75e2b7!important;border-color:#25634f!important;background:#102d26!important}
+:host-context(html[data-theme='dark']) .dashboard-refresh{color:#c9d8eb!important;border-color:#294866!important;background:#0f2034!important}
+:host-context(html[data-theme='dark']) .dashboard-refresh:hover:not(:disabled){color:#8fc3ff!important;border-color:#3b6693!important;background:#132944!important}
+:host-context(html[data-theme='dark']) .recent-document-row{border-bottom-color:#203b5d!important}
+:host-context(html[data-theme='dark']) .folder-overview-item{background:#101f34!important;border-color:#203b5d!important}
+:host-context(html[data-theme='dark']) .storage-warning{color:#ffd67a!important;background:#382d10!important}
+:host-context(html[data-theme='dark']) .security-card-v2{background:radial-gradient(circle at 100% 0%,rgba(31,129,255,.18),transparent 34%),linear-gradient(155deg,#10345f,#092747 60%,#071f3a)!important;border-color:#1c4a7d!important}
+:host-context(html[data-theme='dark']) .security-card-v2 .section-title h2,
+:host-context(html[data-theme='dark']) .security-card-v2 .dashboard-section-kicker,
+:host-context(html[data-theme='dark']) .security-card-v2 .security-check strong{color:#f7fbff!important}
+:host-context(html[data-theme='dark']) .security-card-v2 .security-check small{color:#9fb9d8!important}
 
 @keyframes dashboard-spin{to{transform:rotate(360deg)}}
 @media(max-width:1220px){.dashboard-shell{padding:22px 22px 36px}.dashboard-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.quick-action-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.folder-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
