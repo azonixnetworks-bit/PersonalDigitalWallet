@@ -70,3 +70,12 @@ html[data-theme='dark'] .profile-page .page-header h1 {
 html[data-theme='dark'] .profile-page .page-header .page-subtitle {
   color:#9fb4ce !important;
 }
+
+/* Profile dark-mode identity contrast — global scope avoids Angular style encapsulation on html[data-theme]. */
+html[data-theme='dark'] .profile-page .profile-overview .identity h2,
+html[data-theme='dark'] .profile-page .profile-form .section-heading h2 {
+  color:#f8fbff !important;
+}
+html[data-theme='dark'] .profile-page .profile-overview .identity p {
+  color:#9fb4ce !important;
+}
