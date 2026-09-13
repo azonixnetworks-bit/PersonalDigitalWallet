@@ -1,0 +1,2 @@
+/* Documents action refinement — presentation only. Hide the redundant per-row "Shared With" action while preserving share logic elsewhere. */
+.documents-page .document-actions > button:nth-child(5){display:none!important;}
