@@ -25,3 +25,18 @@ body { margin: 0; }
 .auth-link-row { text-align:right; margin-top:-6px; }
 .auth-link-row a { color:#2563eb; text-decoration:none; font-size:.88rem; font-weight:700; }
 button:disabled { opacity:.65; cursor:not-allowed; }
+
+/* Credentials page title contrast fix — scoped so frozen dashboard/other pages remain untouched. */
+.credentials-page .page-header h1 {
+  color:#172033 !important;
+  text-shadow:none !important;
+}
+.credentials-page .page-header .page-subtitle {
+  color:#64748b !important;
+}
+html[data-theme='dark'] .credentials-page .page-header h1 {
+  color:#f8fbff !important;
+}
+html[data-theme='dark'] .credentials-page .page-header .page-subtitle {
+  color:#9fb4ce !important;
+}
