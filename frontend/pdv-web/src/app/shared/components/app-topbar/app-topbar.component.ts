@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { finalize, take } from 'rxjs';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -18,9 +18,21 @@ export class AppTopbarComponent {
   private readonly router = inject(Router);
   readonly themeService = inject(ThemeService);
   readonly menuOpen = signal(false);
+  readonly sidebarCollapsed = signal(false);
   readonly loggingOut = signal(false);
 
-  toggleMenu(): void { this.menuOpen.update(value => !value); }
+  @HostBinding('class.sidebar-collapsed')
+  get isSidebarCollapsed(): boolean { return this.sidebarCollapsed(); }
+
+  toggleNavigation(): void {
+    if (this.isCompactViewport()) {
+      this.menuOpen.update(value => !value);
+      return;
+    }
+    this.sidebarCollapsed.update(value => !value);
+  }
+
+  openSidebar(): void { this.sidebarCollapsed.set(false); }
   closeMenu(): void { this.menuOpen.set(false); }
   toggleTheme(): void { this.themeService.toggle(); }
 
@@ -31,6 +43,10 @@ export class AppTopbarComponent {
       take(1),
       finalize(() => this.finishLogout())
     ).subscribe({ error: () => undefined });
+  }
+
+  private isCompactViewport(): boolean {
+    return typeof window !== 'undefined' && window.matchMedia('(max-width: 1120px)').matches;
   }
 
   private finishLogout(): void {
