@@ -1,9 +1,14 @@
-<aside class="vault-sidebar">
+<aside class="vault-sidebar" [class.is-open]="menuOpen()">
   <div class="vault-sidebar__brand-row">
     <app-brand />
-    <button class="nav-toggle" type="button" [attr.aria-expanded]="menuOpen()" aria-controls="userPrimaryNavigation" aria-label="Toggle navigation" (click)="toggleMenu()">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="sidebar-actions">
+      <button class="theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-label]="themeService.theme() === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'">
+        <span aria-hidden="true">{{ themeService.theme() === 'dark' ? '☀' : '☾' }}</span>
+      </button>
+      <button class="nav-toggle" type="button" [attr.aria-expanded]="menuOpen()" aria-controls="userPrimaryNavigation" aria-label="Toggle navigation" (click)="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </div>
 
   <nav id="userPrimaryNavigation" class="vault-nav" [class.nav-open]="menuOpen()" aria-label="Primary navigation">
@@ -15,6 +20,7 @@
     <a routerLink="/vault/credentials" routerLinkActive="active" (click)="closeMenu()"><span class="nav-icon" aria-hidden="true">✦</span><span>Credentials</span></a>
     <a routerLink="/backup" routerLinkActive="active" (click)="closeMenu()"><span class="nav-icon" aria-hidden="true">↻</span><span>Backup</span></a>
     <a routerLink="/search" routerLinkActive="active" (click)="closeMenu()"><span class="nav-icon" aria-hidden="true">⌕</span><span>Search</span></a>
+
     <span class="vault-nav__label vault-nav__label--account">Account</span>
     <a routerLink="/profile" routerLinkActive="active" (click)="closeMenu()"><span class="nav-icon" aria-hidden="true">◎</span><span>Profile</span></a>
     <a routerLink="/subscription" routerLinkActive="active" (click)="closeMenu()"><span class="nav-icon" aria-hidden="true">$</span><span>Subscription</span></a>
@@ -22,7 +28,13 @@
   </nav>
 
   <div class="vault-sidebar__trust">
-    <span class="trust-mark" aria-hidden="true">✓</span>
-    <div><strong>Zero-access vault</strong><span>Private by design</span></div>
+    <div class="trust-orb" aria-hidden="true"><span>✓</span></div>
+    <div class="trust-copy"><strong>Zero-access vault</strong><span>Private by design</span></div>
   </div>
+
+  <p class="vault-sidebar__motto">Your life.<br><strong>Safely stored.</strong><span>Private. Secure. Yours.</span></p>
 </aside>
+
+@if (menuOpen()) {
+  <button class="mobile-backdrop" type="button" aria-label="Close navigation" (click)="closeMenu()"></button>
+}
