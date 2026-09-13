@@ -12,6 +12,7 @@
 @import './styles/phase2-design-system.css';
 @import './styles/phase3-auth.css';
 @import './styles/phase9-premium-light.css';
+@import './styles/premium-vault-theme.css';
 
 html, body { min-height: 100%; }
 body { margin: 0; }
