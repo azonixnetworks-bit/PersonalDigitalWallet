@@ -19,6 +19,7 @@
 @import './styles/phase-ui-documents.css';
 @import './styles/phase-ui-documents-actions.css';
 @import './styles/phase-ui-document-filetypes.css';
+@import './styles/phase-ui-auth-premium.css';
 
 html, body { min-height: 100%; }
 body { margin: 0; }
