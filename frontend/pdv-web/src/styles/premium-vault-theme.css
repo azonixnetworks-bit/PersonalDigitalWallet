@@ -1,0 +1,63 @@
+:root{
+  --pdv-bg:#f3f7fc;
+  --pdv-surface:#ffffff;
+  --pdv-surface-soft:#f7faff;
+  --pdv-surface-strong:#edf4ff;
+  --pdv-border:#dce7f5;
+  --pdv-border-strong:#c8daf0;
+  --pdv-text:#0f1f3d;
+  --pdv-text-soft:#52657e;
+  --pdv-muted:#7e90a8;
+  --pdv-primary:#1267e8;
+  --pdv-primary-strong:#0b4ec5;
+  --pdv-primary-soft:#eaf3ff;
+  --pdv-success:#12a873;
+  --pdv-warning:#f59e0b;
+  --pdv-danger:#dc4c4c;
+  --pdv-shadow-sm:0 8px 22px rgba(15,42,78,.06);
+  --pdv-shadow-md:0 18px 45px rgba(15,42,78,.10);
+  --pdv-radius-sm:12px;
+  --pdv-radius-md:16px;
+  --pdv-radius-lg:20px;
+  --pdv-glow:0 0 0 1px rgba(18,103,232,.05),0 14px 34px rgba(18,103,232,.09);
+}
+
+html[data-theme='dark']{
+  --pdv-bg:#07101d;
+  --pdv-surface:#0d1a2c;
+  --pdv-surface-soft:#101f34;
+  --pdv-surface-strong:#132844;
+  --pdv-border:#1d3553;
+  --pdv-border-strong:#2a466a;
+  --pdv-text:#eef6ff;
+  --pdv-text-soft:#a9bdd5;
+  --pdv-muted:#7890ad;
+  --pdv-primary:#4b9cff;
+  --pdv-primary-strong:#78b5ff;
+  --pdv-primary-soft:#102a4e;
+  --pdv-success:#45d29e;
+  --pdv-warning:#f5bb4a;
+  --pdv-danger:#ff7878;
+  --pdv-shadow-sm:0 10px 28px rgba(0,0,0,.18);
+  --pdv-shadow-md:0 24px 58px rgba(0,0,0,.28);
+  --pdv-glow:0 0 0 1px rgba(75,156,255,.08),0 18px 42px rgba(0,0,0,.24);
+}
+
+html{background:var(--pdv-bg);transition:background .2s ease,color .2s ease}
+body{color:var(--pdv-text);background:radial-gradient(circle at 72% 0%,rgba(54,142,255,.08),transparent 30%),var(--pdv-bg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:background .2s ease,color .2s ease}
+
+/* Global presentation only: intentionally does not alter app routes, APIs, forms, or business logic. */
+.app-shell__content{background:transparent}
+
+:is(.panel,.card,.dashboard-card,.vault-card,.premium-card,.ui-card){background:var(--pdv-surface);border-color:var(--pdv-border);color:var(--pdv-text);box-shadow:var(--pdv-shadow-sm)}
+:is(input,select,textarea){color:var(--pdv-text);background:var(--pdv-surface);border-color:var(--pdv-border-strong)}
+:is(input,select,textarea):focus{border-color:var(--pdv-primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--pdv-primary) 16%,transparent)}
+
+html[data-theme='dark'] :is(.panel,.card,.dashboard-card,.vault-card,.premium-card,.ui-card){background:var(--pdv-surface);border-color:var(--pdv-border);color:var(--pdv-text)}
+html[data-theme='dark'] :is(h1,h2,h3,h4,h5,h6,.page-title,.section-title){color:var(--pdv-text)}
+html[data-theme='dark'] :is(p,.muted,.subtitle,.page-subtitle,.help-text){color:var(--pdv-text-soft)}
+html[data-theme='dark'] :is(table,thead,tbody,tr,td,th){border-color:var(--pdv-border)}
+html[data-theme='dark'] :is(td,th){color:var(--pdv-text-soft)}
+html[data-theme='dark'] :is(button:not(.vault-nav button),.btn){border-color:var(--pdv-border-strong)}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
