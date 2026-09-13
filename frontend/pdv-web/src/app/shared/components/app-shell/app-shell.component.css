@@ -1,5 +1,4 @@
 :host{display:block}
-.app-shell{min-height:100vh;display:grid;grid-template-columns:258px minmax(0,1fr);background:var(--pdv-bg,#f3f7fc);transition:background .2s ease}
+.app-shell{min-height:100vh;display:grid;grid-template-columns:auto minmax(0,1fr);background:var(--pdv-bg,#f3f7fc);transition:background .2s ease}
 .app-shell__content{min-width:0;min-height:100vh;overflow-x:hidden;background:radial-gradient(circle at 82% 0%,rgba(61,145,255,.07),transparent 28%),transparent}
-@media(max-width:1280px){.app-shell{grid-template-columns:240px minmax(0,1fr)}}
 @media(max-width:1120px){.app-shell{grid-template-columns:1fr}.app-shell__content{min-height:calc(100vh - 68px)}}
