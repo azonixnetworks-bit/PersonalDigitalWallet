@@ -1,6 +1,6 @@
 <aside class="vault-sidebar" [class.is-collapsed]="sidebarCollapsed()">
   <div class="vault-sidebar__brand-row">
-    <app-brand />
+    <div class="brand-slot"><app-brand /></div>
     <button class="nav-toggle" type="button" [attr.aria-expanded]="menuOpen() || !sidebarCollapsed()" aria-controls="userPrimaryNavigation" aria-label="Toggle navigation" (click)="toggleNavigation()">
       <span></span><span></span><span></span>
     </button>
@@ -40,12 +40,6 @@
     <p class="vault-sidebar__motto">Your life.<br><strong>Safely stored.</strong><span>Private. Secure. Yours.</span></p>
   </div>
 </aside>
-
-@if (sidebarCollapsed()) {
-  <button class="desktop-reopen" type="button" aria-label="Open navigation" (click)="openSidebar()">
-    <span></span><span></span><span></span>
-  </button>
-}
 
 @if (menuOpen()) {
   <button class="mobile-backdrop" type="button" aria-label="Close navigation" (click)="closeMenu()"></button>
