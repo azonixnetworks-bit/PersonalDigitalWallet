@@ -70,16 +70,8 @@
     <div class="upload-grid premium-upload-grid">
       <div class="upload-file-column">
         <label class="upload-file-picker premium-file-picker" for="documentFile" [class.has-file]="selectedFile()">
-          <input
-            #fileInput
-            id="documentFile"
-            type="file"
-            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-            [disabled]="uploading()"
-            (change)="chooseFile($event)">
-
+          <input #fileInput id="documentFile" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" [disabled]="uploading()" (change)="chooseFile($event)">
           <span class="premium-cloud-icon" aria-hidden="true">↑</span>
-
           <span class="upload-file-copy premium-file-copy">
             <strong>{{ selectedFile() ? 'Document selected' : 'Choose a document to protect' }}</strong>
             <span class="file-picker-action">{{ selectedFile() ? 'Choose another file' : 'Browse files' }}</span>
@@ -93,9 +85,7 @@
             <strong>{{ selectedFile() ? selectedFile()!.name : 'No file selected' }}</strong>
             <small>{{ selectedFile() ? fileHint() : 'Select a supported document to continue.' }}</small>
           </div>
-          @if (selectedFile()) {
-            <span class="selected-file-ready">Ready</span>
-          }
+          @if (selectedFile()) { <span class="selected-file-ready">Ready</span> }
         </div>
       </div>
 
@@ -103,249 +93,114 @@
         @if (isFolderView()) {
           <div class="premium-panel-heading">
             <span class="panel-heading-icon" aria-hidden="true">▣</span>
-            <div>
-              <strong>Upload destination</strong>
-              <small>This folder is locked as the destination.</small>
-            </div>
+            <div><strong>Upload destination</strong><small>This folder is locked as the destination.</small></div>
           </div>
-
           <div class="folder-locked-destination" [class.is-unavailable]="!currentFolder() && !loadingFolders()">
             <span class="folder-locked-icon" aria-hidden="true">📁</span>
             <div>
               <span class="vault-kicker">Current folder</span>
               <strong>{{ folderViewTitle() }}</strong>
               <small>
-                @if (loadingFolders()) {
-                  Confirming folder access…
-                } @else if (currentFolder()) {
-                  New uploads from this page are stored directly inside this folder.
-                } @else {
-                  This folder cannot be used. Return to Folders and choose an available folder.
-                }
+                @if (loadingFolders()) { Confirming folder access… }
+                @else if (currentFolder()) { New uploads from this page are stored directly inside this folder. }
+                @else { This folder cannot be used. Return to Folders and choose an available folder. }
               </small>
             </div>
           </div>
         } @else {
           <div class="premium-panel-heading">
             <span class="panel-heading-icon" aria-hidden="true">▣</span>
-            <div>
-              <strong>Select Upload Location</strong>
-              <small>Choose where this encrypted document should be stored.</small>
-            </div>
+            <div><strong>Select Upload Location</strong><small>Choose where this encrypted document should be stored.</small></div>
           </div>
 
           <fieldset class="upload-location-fieldset premium-location-options" [disabled]="uploading()">
             <legend class="sr-only">Where should this file be stored?</legend>
-
-            <label class="upload-location-option premium-location-option"
-                   [class.is-selected]="uploadLocation() === 'root'">
-              <input
-                type="radio"
-                name="uploadLocation"
-                value="root"
-                [checked]="uploadLocation() === 'root'"
-                (change)="setUploadLocation('root')">
-              <span class="location-radio" aria-hidden="true"></span>
-              <span class="location-icon root-icon" aria-hidden="true">⌂</span>
-              <span class="location-copy">
-                <strong>Root Vault</strong>
-                <small>Store directly in your private vault without a folder.</small>
-              </span>
+            <label class="upload-location-option premium-location-option" [class.is-selected]="uploadLocation() === 'root'">
+              <input type="radio" name="uploadLocation" value="root" [checked]="uploadLocation() === 'root'" (change)="setUploadLocation('root')">
+              <span class="location-radio" aria-hidden="true"></span><span class="location-icon root-icon" aria-hidden="true">⌂</span>
+              <span class="location-copy"><strong>Root Vault</strong><small>Store directly in your private vault without a folder.</small></span>
             </label>
-
-            <label class="upload-location-option premium-location-option"
-                   [class.is-selected]="uploadLocation() === 'folder'"
-                   [class.is-disabled]="!foldersAvailable() || loadingFolders()">
-              <input
-                type="radio"
-                name="uploadLocation"
-                value="folder"
-                [checked]="uploadLocation() === 'folder'"
-                [disabled]="!foldersAvailable() || loadingFolders()"
-                (change)="setUploadLocation('folder')">
-              <span class="location-radio" aria-hidden="true"></span>
-              <span class="location-icon folder-icon" aria-hidden="true">▰</span>
-              <span class="location-copy">
-                <strong>Inside a Folder</strong>
-                <small>Select one of your existing private folders.</small>
-              </span>
+            <label class="upload-location-option premium-location-option" [class.is-selected]="uploadLocation() === 'folder'" [class.is-disabled]="!foldersAvailable() || loadingFolders()">
+              <input type="radio" name="uploadLocation" value="folder" [checked]="uploadLocation() === 'folder'" [disabled]="!foldersAvailable() || loadingFolders()" (change)="setUploadLocation('folder')">
+              <span class="location-radio" aria-hidden="true"></span><span class="location-icon folder-icon" aria-hidden="true">▰</span>
+              <span class="location-copy"><strong>Inside a Folder</strong><small>Select one of your existing private folders.</small></span>
             </label>
           </fieldset>
 
           @if (uploadLocation() === 'folder') {
             <div class="folder-selection-area premium-folder-select">
               <label for="folderId">Choose folder</label>
-              <select
-                id="folderId"
-                [disabled]="uploading()"
-                [value]="selectedFolderId() ?? ''"
-                (change)="setSelectedFolder($any($event.target).value)">
+              <select id="folderId" [disabled]="uploading()" [value]="selectedFolderId() ?? ''" (change)="setSelectedFolder($any($event.target).value)">
                 <option value="">{{ foldersAvailable() ? 'Select a folder' : 'No folders available' }}</option>
-                @for (folder of folders(); track folder.id) {
-                  <option [value]="folder.id">{{ folder.name }}</option>
-                }
+                @for (folder of folders(); track folder.id) { <option [value]="folder.id">{{ folder.name }}</option> }
               </select>
-
               <p class="folder-availability-message" aria-live="polite">
-                @if (loadingFolders()) {
-                  Loading folders…
-                } @else if (foldersError()) {
-                  {{ foldersError() }}
-                } @else if (folders().length === 0) {
-                  No folders yet. Root Vault is ready, or create a folder first.
-                } @else {
-                  {{ folders().length }} {{ folders().length === 1 ? 'folder' : 'folders' }} available.
-                }
+                @if (loadingFolders()) { Loading folders… }
+                @else if (foldersError()) { {{ foldersError() }} }
+                @else if (folders().length === 0) { No folders yet. Root Vault is ready, or create a folder first. }
+                @else { {{ folders().length }} {{ folders().length === 1 ? 'folder' : 'folders' }} available. }
               </p>
             </div>
           } @else {
-            <div class="root-vault-note">
-              <span aria-hidden="true">✓</span>
-              <p><strong>Root Vault selected</strong><small>The document will be encrypted and stored at the top level of your vault.</small></p>
-            </div>
+            <div class="root-vault-note"><span aria-hidden="true">✓</span><p><strong>Root Vault selected</strong><small>The document will be encrypted and stored at the top level of your vault.</small></p></div>
           }
         }
       </div>
     </div>
 
     <div class="upload-footer premium-upload-footer">
-      <div class="upload-destination">
-        <span class="destination-label">Upload destination</span>
-        <strong>{{ uploadDestination() }}</strong>
-      </div>
-
-      <button
-        class="premium-upload-button"
-        type="button"
-        [disabled]="uploading() || !selectedFile() || (isFolderView() && !currentFolder())"
-        (click)="upload()">
-        <span aria-hidden="true">🔒</span>
-        {{ uploading() ? 'Securing document…' : 'Upload & Encrypt Document' }}
-      </button>
+      <div class="upload-destination"><span class="destination-label">Upload destination</span><strong>{{ uploadDestination() }}</strong></div>
+      <button class="premium-upload-button" type="button" [disabled]="uploading() || !selectedFile() || (isFolderView() && !currentFolder())" (click)="upload()"><span aria-hidden="true">🔒</span>{{ uploading() ? 'Securing document…' : 'Upload & Encrypt Document' }}</button>
     </div>
 
     @if (uploadProgress().stage !== 'idle') {
-      <section
-        class="encryption-progress-panel"
-        [class.is-encrypting]="uploadProgress().stage === 'encrypting'"
-        [class.is-complete]="uploadProgress().stage === 'complete'"
-        [class.is-error]="uploadProgress().stage === 'error'"
-        aria-live="polite">
-        <div class="encryption-progress-header">
-          <div>
-            <strong>{{ uploadProgress().title }}</strong>
-            <small>{{ uploadProgress().detail }}</small>
-          </div>
-          <span class="encryption-progress-percent">{{ uploadProgress().percent }}%</span>
-        </div>
-
-        <div
-          class="encryption-progress-track"
-          role="progressbar"
-          aria-label="Secure document processing progress"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          [attr.aria-valuenow]="uploadProgress().percent">
-          <div class="encryption-progress-bar" [style.width.%]="uploadProgress().percent"></div>
-        </div>
-
-        <div class="encryption-progress-stage">
-          <span class="encryption-status-icon" [attr.data-stage]="uploadProgress().stage" aria-hidden="true"></span>
-          <span>{{ uploadProgress().title }}</span>
-        </div>
-
-        @if (uploadProgress().stage === 'encrypting') {
-          <small class="progress-truth-note">90% means the browser upload is complete. The backend does not expose AES sub-stage percentages, so the bar reaches 100% only after encrypted storage is confirmed.</small>
-        }
+      <section class="encryption-progress-panel" [class.is-encrypting]="uploadProgress().stage === 'encrypting'" [class.is-complete]="uploadProgress().stage === 'complete'" [class.is-error]="uploadProgress().stage === 'error'" aria-live="polite">
+        <div class="encryption-progress-header"><div><strong>{{ uploadProgress().title }}</strong><small>{{ uploadProgress().detail }}</small></div><span class="encryption-progress-percent">{{ uploadProgress().percent }}%</span></div>
+        <div class="encryption-progress-track" role="progressbar" aria-label="Secure document processing progress" aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="uploadProgress().percent"><div class="encryption-progress-bar" [style.width.%]="uploadProgress().percent"></div></div>
+        <div class="encryption-progress-stage"><span class="encryption-status-icon" [attr.data-stage]="uploadProgress().stage" aria-hidden="true"></span><span>{{ uploadProgress().title }}</span></div>
+        @if (uploadProgress().stage === 'encrypting') { <small class="progress-truth-note">90% means the browser upload is complete. The backend does not expose AES sub-stage percentages, so the bar reaches 100% only after encrypted storage is confirmed.</small> }
       </section>
     }
   </section>
 
   <section class="documents-toolbar card">
     <div>
-      <span class="vault-kicker">{{ isFolderView() ? 'Inside folder' : 'Document view' }}</span>
-      <strong>{{ listLabel() }}</strong>
-      <small>
-        @if (isFolderView()) {
-          {{ filteredDocuments().length }} {{ filteredDocuments().length === 1 ? 'file' : 'files' }} in this folder
-        } @else {
-          {{ filteredDocuments().length }} of {{ documents().length }} documents
-        }
-      </small>
+      <span class="vault-kicker">{{ isFolderView() ? 'Inside folder' : 'Document view' }}</span><strong>{{ listLabel() }}</strong>
+      <small>@if (isFolderView()) { {{ filteredDocuments().length }} {{ filteredDocuments().length === 1 ? 'file' : 'files' }} in this folder } @else { {{ filteredDocuments().length }} of {{ documents().length }} documents }</small>
     </div>
-
-    @if (isFolderView()) {
-      <a class="btn btn--secondary" routerLink="/vault/folders">Back to folders</a>
-    } @else {
-      <label class="document-filter-label" for="documentFilter">
-        <span>Filter</span>
-        <select id="documentFilter" [value]="filterMode()" (change)="setFilter($any($event.target).value)">
-          <option value="all">All documents</option>
-          <option value="root">Root Vault</option>
-          @for (folder of folders(); track folder.id) {
-            <option [value]="'folder:' + folder.id">{{ folder.name }}</option>
-          }
-        </select>
-      </label>
+    @if (isFolderView()) { <a class="btn btn--secondary" routerLink="/vault/folders">Back to folders</a> }
+    @else {
+      <label class="document-filter-label" for="documentFilter"><span>Filter</span><select id="documentFilter" [value]="filterMode()" (change)="setFilter($any($event.target).value)"><option value="all">All documents</option><option value="root">Root Vault</option>@for (folder of folders(); track folder.id) { <option [value]="'folder:' + folder.id">{{ folder.name }}</option> }</select></label>
     }
   </section>
 
-  @if (isFolderView() && foldersError()) {
-    <section class="card vault-error-card" role="alert">
-      <div>
-        <strong>Folder unavailable</strong>
-        <span>{{ foldersError() }}</span>
-      </div>
-      <a class="btn btn--secondary" routerLink="/vault/folders">Back to folders</a>
-    </section>
-  }
-
-  @if (documentsError()) {
-    <section class="card vault-error-card" role="alert">
-      <div><strong>Documents are unavailable</strong><span>{{ documentsError() }}</span></div>
-      <button class="btn btn--secondary" type="button" (click)="loadDocuments()">Try again</button>
-    </section>
-  }
+  @if (isFolderView() && foldersError()) { <section class="card vault-error-card" role="alert"><div><strong>Folder unavailable</strong><span>{{ foldersError() }}</span></div><a class="btn btn--secondary" routerLink="/vault/folders">Back to folders</a></section> }
+  @if (documentsError()) { <section class="card vault-error-card" role="alert"><div><strong>Documents are unavailable</strong><span>{{ documentsError() }}</span></div><button class="btn btn--secondary" type="button" (click)="loadDocuments()">Try again</button></section> }
 
   <section class="document-list-section" aria-labelledby="document-list-title">
-    <div class="vault-section-heading">
-      <div><span class="vault-kicker">Private storage</span><h2 id="document-list-title">{{ listLabel() }}</h2></div>
-      <span class="vault-count-pill">{{ filteredDocuments().length }} files</span>
-    </div>
-
-    @if (loadingDocuments()) {
-      <div class="card vault-state-card"><app-ui-loader label="Loading encrypted document metadata…" /></div>
-    } @else if (!documentsError() && filteredDocuments().length === 0) {
-      <div class="card vault-state-card">
-        <app-ui-empty-state
-          icon="📄"
-          [title]="isFolderView() ? 'No files in this folder' : 'No documents here'"
-          [description]="isFolderView()
-            ? 'Upload a document above and it will be encrypted and stored directly inside this folder.'
-            : 'Choose a file above and store it in Root Vault or one of your folders.'" />
-      </div>
+    <div class="vault-section-heading"><div><span class="vault-kicker">Private storage</span><h2 id="document-list-title">{{ listLabel() }}</h2></div><span class="vault-count-pill">{{ filteredDocuments().length }} files</span></div>
+    @if (loadingDocuments()) { <div class="card vault-state-card"><app-ui-loader label="Loading encrypted document metadata…" /></div> }
+    @else if (!documentsError() && filteredDocuments().length === 0) {
+      <div class="card vault-state-card"><app-ui-empty-state icon="📄" [title]="isFolderView() ? 'No files in this folder' : 'No documents here'" [description]="isFolderView() ? 'Upload a document above and it will be encrypted and stored directly inside this folder.' : 'Choose a file above and store it in Root Vault or one of your folders.'" /></div>
     } @else if (filteredDocuments().length > 0) {
       <div class="document-list">
         @for (document of filteredDocuments(); track document.id) {
           <article class="card document-card" [class.search-focus]="focusedDocumentId() === document.id">
             <div class="document-main">
-              <span class="document-icon" aria-hidden="true">📄</span>
-              <div class="document-copy">
-                <strong>{{ document.fileName || 'Unnamed document' }}</strong>
-                <span>{{ formatSize(document.fileSize) }} • {{ folderName(document.folderId) }}</span>
-                <small>Uploaded {{ formatDate(document.createdAt) }}</small>
-              </div>
+              <span class="document-icon" aria-hidden="true">
+                @if ((document.fileName || '').toLowerCase().endsWith('.pdf')) { <span class="file-type-logo file-type-logo--pdf">PDF</span> }
+                @else if ((document.fileName || '').toLowerCase().endsWith('.doc') || (document.fileName || '').toLowerCase().endsWith('.docx')) { <span class="file-type-logo file-type-logo--word">W</span> }
+                @else if ((document.fileName || '').toLowerCase().endsWith('.jpg') || (document.fileName || '').toLowerCase().endsWith('.jpeg') || (document.fileName || '').toLowerCase().endsWith('.png')) { <span class="file-type-logo file-type-logo--image">▧</span> }
+                @else { <span class="file-type-logo file-type-logo--generic">FILE</span> }
+              </span>
+              <div class="document-copy"><strong>{{ document.fileName || 'Unnamed document' }}</strong><span>{{ formatSize(document.fileSize) }} • {{ folderName(document.folderId) }}</span><small>Uploaded {{ formatDate(document.createdAt) }}</small></div>
             </div>
-
             <div class="document-actions">
               <button type="button" [disabled]="actionBusyId() !== null" (click)="showDetails(document)">Details</button>
               <button type="button" [disabled]="actionBusyId() !== null" (click)="download(document)">Download</button>
               <button class="btn--secondary" type="button" [disabled]="actionBusyId() !== null" (click)="rename(document)">Rename</button>
               <button class="btn--secondary" type="button" [disabled]="actionBusyId() !== null" (click)="openSharePanel(document, true)">Share</button>
-              <button class="btn--secondary" type="button" [disabled]="actionBusyId() !== null" (click)="openSharePanel(document)">Shared With</button>
-              <button class="danger-button" type="button" [disabled]="actionBusyId() !== null" (click)="remove(document)">
-                {{ actionBusyId() === document.id ? 'Working…' : 'Delete' }}
-              </button>
+              <button class="danger-button" type="button" [disabled]="actionBusyId() !== null" (click)="remove(document)">{{ actionBusyId() === document.id ? 'Working…' : 'Delete' }}</button>
             </div>
           </article>
         }
@@ -355,100 +210,25 @@
 
   @if (details(); as item) {
     <section id="document-details-panel" class="card details-panel" aria-labelledby="details-title">
-      <div class="panel-heading">
-        <div><span class="vault-kicker">Metadata</span><h2 id="details-title">Document details</h2></div>
-        <button class="btn btn--secondary" type="button" (click)="closeDetails()">Close</button>
-      </div>
-
-      <dl class="details-grid">
-        <div><dt>File name</dt><dd>{{ item.fileName }}</dd></div>
-        <div><dt>Type</dt><dd>{{ item.contentType || '—' }}</dd></div>
-        <div><dt>Size</dt><dd>{{ formatSize(item.fileSize) }}</dd></div>
-        <div><dt>Location</dt><dd>{{ folderName(item.folderId) }}</dd></div>
-        <div><dt>Uploaded</dt><dd>{{ formatDate(item.createdAt) }}</dd></div>
-        <div class="hash-detail"><dt>SHA-256 integrity hash</dt><dd>{{ item.fileHash || '—' }}</dd></div>
-      </dl>
+      <div class="panel-heading"><div><span class="vault-kicker">Metadata</span><h2 id="details-title">Document details</h2></div><button class="btn btn--secondary" type="button" (click)="closeDetails()">Close</button></div>
+      <dl class="details-grid"><div><dt>File name</dt><dd>{{ item.fileName }}</dd></div><div><dt>Type</dt><dd>{{ item.contentType || '—' }}</dd></div><div><dt>Size</dt><dd>{{ formatSize(item.fileSize) }}</dd></div><div><dt>Location</dt><dd>{{ folderName(item.folderId) }}</dd></div><div><dt>Uploaded</dt><dd>{{ formatDate(item.createdAt) }}</dd></div><div class="hash-detail"><dt>SHA-256 integrity hash</dt><dd>{{ item.fileHash || '—' }}</dd></div></dl>
     </section>
   }
 
   @if (shareDocument(); as document) {
     <section id="sharePanel" class="card share-panel" aria-labelledby="share-title">
-      <div class="panel-heading">
-        <div>
-          <span class="vault-kicker">Recipient-controlled access</span>
-          <h2 id="share-title">Secure document sharing</h2>
-          <p>{{ document.fileName }}</p>
-        </div>
-        <button class="btn btn--secondary" type="button" (click)="closeSharePanel()">Close</button>
-      </div>
-
-      <form
-  class="share-form"
-  (submit)="sendShare(); $event.preventDefault()">
-  <label for="recipientEmail">
-    Registered PDV client email
-  </label>
-
-  <div class="share-form-row">
-    <input
-      id="recipientEmail"
-      type="email"
-      autocomplete="off"
-      placeholder="registered-client@example.com"
-      maxlength="320"
-      [formControl]="shareEmail">
-
-    <button
-      type="submit"
-      [disabled]="shareBusy() || shareEmail.invalid">
-      {{ shareBusy() ? 'Sending…' : 'Share with client' }}
-    </button>
-  </div>
-
-  @if (shareEmail.touched && shareEmail.invalid) {
-    <p class="field-error">
-      Enter a valid registered PDV client email address.
-    </p>
-  }
-
-  <p class="share-security-note">
-    Only existing Personal Digital Vault clients can receive this file.
-    External email addresses are not allowed.
-    The recipient must sign in to their own account and accept the secure invitation before access is granted.
-  </p>
-</form>
-
-
-      <div class="share-list-heading">
-        <div><span class="vault-kicker">Access records</span><h3>Shared with</h3></div>
-        <button class="btn btn--secondary" type="button" [disabled]="loadingShares()" (click)="loadShares(document.id)">Refresh status</button>
-      </div>
-
-      @if (loadingShares()) {
-        <div class="share-state"><app-ui-loader label="Loading share status…" [compact]="true" /></div>
-      } @else if (shares().length === 0) {
-        <div class="share-state muted">This document has not been shared yet.</div>
-      } @else {
-        <div class="share-list">
-          @for (share of shares(); track share.shareId) {
-            <article class="share-row" [class.revoked]="!isShareRevocable(share)">
-              <div class="share-recipient">
-                <strong>{{ share.recipientName || 'Recipient' }}</strong>
-                <span>{{ share.recipientEmail }}</span>
-                <small>Shared {{ formatDate(share.sharedAt) }} • invitation expiry {{ formatDate(share.expiresAt) }}</small>
-              </div>
-
-              <div class="share-status-area">
-                <span class="share-status">{{ share.status || 'Pending' }}</span>
-                @if (share.acceptedAt) { <small>Accepted {{ formatDate(share.acceptedAt) }}</small> }
-                @if (share.revokedAt) { <small>Revoked {{ formatDate(share.revokedAt) }}</small> }
-                @if (isShareRevocable(share)) {
-                  <button class="danger-button" type="button" [disabled]="shareBusy()" (click)="revokeShare(share)">Revoke</button>
-                }
-              </div>
-            </article>
-          }
-        </div>
+      <div class="panel-heading"><div><span class="vault-kicker">Recipient-controlled access</span><h2 id="share-title">Secure document sharing</h2><p>{{ document.fileName }}</p></div><button class="btn btn--secondary" type="button" (click)="closeSharePanel()">Close</button></div>
+      <form class="share-form" (submit)="sendShare(); $event.preventDefault()">
+        <label for="recipientEmail">Registered PDV client email</label>
+        <div class="share-form-row"><input id="recipientEmail" type="email" autocomplete="off" placeholder="registered-client@example.com" maxlength="320" [formControl]="shareEmail"><button type="submit" [disabled]="shareBusy() || shareEmail.invalid">{{ shareBusy() ? 'Sending…' : 'Share with client' }}</button></div>
+        @if (shareEmail.touched && shareEmail.invalid) { <p class="field-error">Enter a valid registered PDV client email address.</p> }
+        <p class="share-security-note">Only existing Personal Digital Vault clients can receive this file. External email addresses are not allowed. The recipient must sign in to their own account and accept the secure invitation before access is granted.</p>
+      </form>
+      <div class="share-list-heading"><div><span class="vault-kicker">Access records</span><h3>Shared with</h3></div><button class="btn btn--secondary" type="button" [disabled]="loadingShares()" (click)="loadShares(document.id)">Refresh status</button></div>
+      @if (loadingShares()) { <div class="share-state"><app-ui-loader label="Loading share status…" [compact]="true" /></div> }
+      @else if (shares().length === 0) { <div class="share-state muted">This document has not been shared yet.</div> }
+      @else {
+        <div class="share-list">@for (share of shares(); track share.shareId) { <article class="share-row" [class.revoked]="!isShareRevocable(share)"><div class="share-recipient"><strong>{{ share.recipientName || 'Recipient' }}</strong><span>{{ share.recipientEmail }}</span><small>Shared {{ formatDate(share.sharedAt) }} • invitation expiry {{ formatDate(share.expiresAt) }}</small></div><div class="share-status-area"><span class="share-status">{{ share.status || 'Pending' }}</span>@if (share.acceptedAt) { <small>Accepted {{ formatDate(share.acceptedAt) }}</small> }@if (share.revokedAt) { <small>Revoked {{ formatDate(share.revokedAt) }}</small> }@if (isShareRevocable(share)) { <button class="danger-button" type="button" [disabled]="shareBusy()" (click)="revokeShare(share)">Revoke</button> }</div></article> }</div>
       }
     </section>
   }
